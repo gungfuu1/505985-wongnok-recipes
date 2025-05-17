@@ -54,14 +54,22 @@ export function gfRegister() {
         headers: {
             'Content-Type': 'application/json',
             'apikey': apiKey,
-            'Authorization': `Bearer ${apiKey}`
+            'Authorization': `Bearer ${apiKey}`,
+            'Prefer': 'return=representation'  // เพิ่มบรรทัดนี้เพื่อให้ Supabase คืนข้อมูลที่ insert
         },
         body: JSON.stringify(data)
     })
-    .then(res => res.json())
-    .then(result => {
-        alert('ลงทะเบียนสําเร็จ');
+    .then(async res => {
+        const responseData = await res.json();
+        if (!res.ok) {
+            throw new Error(JSON.stringify(responseData));
+        }
+        alert('ลงทะเบียนสำเร็จ');
         window.location.href = 'login.html';
+    })
+    .catch(err => {
+        console.error('Register error:', err);
+        alert('ลงทะเบียนไม่สำเร็จ: ' + err.message);
     });
 }
 
