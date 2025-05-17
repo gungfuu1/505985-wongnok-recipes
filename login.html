@@ -15,13 +15,13 @@
         <a href="create_recipe.html" class="gf-bar-item gf-button gf-right" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
     </div>
 
-    <div class="gf-content gf-card gf-white gf-margin">
+    <div class="gf-container gf-padding">
         <h2>เข้าสู่ระบบ</h2>
-        <label>อีเมล</label>
-        <input id="email" type="email" placeholder="Email" class="gf-input gf-border">
-        <label>รหัสผ่าน</label>
-        <input id="password" type="password" placeholder="Password" class="gf-input gf-border gf-margin-bottom">
-        <button id="loginBtn" class="gf-button gf-green">เข้าสู่ระบบ</button>
+        <!--  ID ตรงกับที่ใช้ใน script.js -->
+        <input type="email" id="gf-login-email" placeholder="Email" class="gf-input gf-border"><br><br>
+        <input type="password" id="gf-login-password" placeholder="รหัสผ่าน" class="gf-input gf-border"><br><br>
+        <button onclick="gfLogin()" class="gf-button gf-blue">เข้าสู่ระบบ</button>
+        <p>ยังไม่มีบัญชี? <a href="register.html">ลงทะเบียน</a></p>
     </div>
 
     <script type="module">
