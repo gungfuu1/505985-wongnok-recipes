@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>เข้าสู่ระบบ</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" type="module"></script>
+</head>
+<body>
+    <div class="gf-bar gf-light-grey gf-card-4">
+        <a href="index.html" class="gf-bar-item gf-button">หน้าหลัก</a>
+        <a href="about.html" class="gf-bar-item gf-button">About</a>
+        <a href="login.html" class="gf-bar-item gf-button gf-right" id="loginMenu">เข้าสู่ระบบ</a>
+        <a href="register.html" class="gf-bar-item gf-button gf-right">ลงทะเบียน</a>
+        <a href="create_recipe.html" class="gf-bar-item gf-button gf-right" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
+    </div>
+
+    <div class="gf-content gf-card gf-white gf-margin">
+        <h2>เข้าสู่ระบบ</h2>
+        <label>อีเมล</label>
+        <input id="email" type="email" placeholder="Email" class="gf-input gf-border">
+        <label>รหัสผ่าน</label>
+        <input id="password" type="password" placeholder="Password" class="gf-input gf-border gf-margin-bottom">
+        <button id="loginBtn" class="gf-button gf-green">เข้าสู่ระบบ</button>
+    </div>
+
+    <script type="module">
+        import { checkLoginStatus, gfLogin } from './script.js';
+        checkLoginStatus();
+
+        document.getElementById('loginBtn').addEventListener('click', gfLogin);
+    </script>
+</body>
+</html>

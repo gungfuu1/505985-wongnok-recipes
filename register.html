@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - GF Food Blog</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module">
+        import { gfRegister, checkLoginStatus } from './script.js';
+        
+        // ทำให้ฟังก์ชันสามารถเรียกใช้ได้จาก onclick
+        window.gfRegister = gfRegister;
+        
+        // ตรวจสอบสถานะการเข้าสู่ระบบเมื่อโหลดหน้า
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
+    </script>
+</head>
+<body>
+    <div class="gf-bar gf-light-grey gf-card-4">
+    <a href="index.html" class="gf-bar-item gf-button">หน้าหลัก</a>
+    <a href="about.html" class="gf-bar-item gf-button">About</a>
+    <a href="login.html" class="gf-bar-item gf-button gf-right" id="loginMenu">เข้าสู่ระบบ</a>
+    <a href="register.html" class="gf-bar-item gf-button gf-right">ลงทะเบียน</a>
+    <a href="create_recipe.html" class="gf-bar-item gf-button gf-right" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
+</div>
+
+    <div class="gf-container gf-padding">
+        <h2>ลงทะเบียน</h2>
+        <input type="text" id="gf-fullname" placeholder="ชื่อ-สกุล" class="gf-input gf-border"><br><br>
+        <input type="number" id="gf-age" placeholder="อายุ" class="gf-input gf-border"><br><br>
+        <input type="text" id="gf-occupation" placeholder="อาชีพ" class="gf-input gf-border"><br><br>
+        <input type="email" id="gf-email" placeholder="Email" class="gf-input gf-border"><br><br>
+        <input type="date" id="gf-birthdate" class="gf-input gf-border"><br><br>
+        <input type="password" id="gf-password" placeholder="รหัสผ่าน" class="gf-input gf-border"><br><br>
+        <button onclick="gfRegister()" class="gf-button gf-blue">ลงทะเบียน</button>
+    </div>
+</body>
+</html>
