@@ -1,0 +1,10 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' 'unsafe-eval';
+      connect-src 'self' https://asooyypcnuxtaxzosvaa.supabase.co;
+      style-src 'self' 'unsafe-inline';
+      img-src 'self' data: https:;
+    """
