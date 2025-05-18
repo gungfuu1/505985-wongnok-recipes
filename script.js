@@ -1,5 +1,5 @@
 const supabaseUrl = 'https://kiqgltbzomgteccozsfg.supabase.co';
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ใช้ของคุณเองเต็มๆ
+const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWdsdGJ6b21ndGVjY296c2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NjAyMjIsImV4cCI6MjA2MzEzNjIyMn0.3wTMcOfYJYXAIshFjhQrpBdFUMS852NUzZNyPpqxbLM'; // ใช้ของคุณเองเต็มๆ
 const usersEndpoint = `${supabaseUrl}/rest/v1/users`;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -127,7 +127,8 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: {
           apikey: apiKey,
           Authorization: `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
         }
       })
       .then(() => {
