@@ -5,26 +5,24 @@
   <title>ลงทะเบียน - GF Food Blog</title>
   <link rel="stylesheet" href="style.css">
   <script src="axios.min.js"></script>
-  <script src="script.js" defer></script>
+  <script src="script-non-module.js"></script>
 </head>
 <body>
-  <div class="gf-bar gf-light-grey gf-card-4">
-    <a href="index.html" class="gf-bar-item gf-button">หน้าหลัก</a>
-    <a href="about.html" class="gf-bar-item gf-button">About</a>
-    <a href="login.html" class="gf-bar-item gf-button gf-right" id="loginMenu">เข้าสู่ระบบ</a>
-    <a href="register.html" class="gf-bar-item gf-button gf-right">ลงทะเบียน</a>
-    <a href="create_recipe.html" class="gf-bar-item gf-button gf-right" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
+  <div class="gf-menubar gf-light-grey gf-padding">
+    <a href="index.html" class="gf-button">หน้าหลัก</a>
+    <a href="register.html" class="gf-button">ลงทะเบียน</a>
+    <a href="login.html" class="gf-button" id="loginMenu">เข้าสู่ระบบ</a>
   </div>
 
   <div class="gf-container gf-padding">
     <h2>ลงทะเบียน</h2>
-    <input type="text" id="fullname" placeholder="ชื่อ-สกุล" class="gf-input gf-border"><br><br>
-    <input type="number" id="age" placeholder="อายุ" class="gf-input gf-border"><br><br>
-    <input type="text" id="occupation" placeholder="อาชีพ" class="gf-input gf-border"><br><br>
-    <input type="email" id="email" placeholder="Email" class="gf-input gf-border"><br><br>
-    <input type="date" id="birthdate" class="gf-input gf-border"><br><br>
-    <input type="password" id="password" placeholder="รหัสผ่าน" class="gf-input gf-border"><br><br>
-    <button id="registerBtn" class="gf-button gf-blue">ลงทะเบียน</button>
+    <input type="text" id="gf-fullname" class="gf-input gf-border" placeholder="ชื่อ-สกุล"><br><br>
+    <input type="number" id="gf-age" class="gf-input gf-border" placeholder="อายุ"><br><br>
+    <input type="text" id="gf-occupation" class="gf-input gf-border" placeholder="อาชีพ"><br><br>
+    <input type="email" id="gf-email" class="gf-input gf-border" placeholder="Email"><br><br>
+    <input type="date" id="gf-birthdate" class="gf-input gf-border"><br><br>
+    <input type="password" id="gf-password" class="gf-input gf-border" placeholder="รหัสผ่าน"><br><br>
+    <button class="gf-button gf-green" onclick="registerUser()">ลงทะเบียน</button>
   </div>
 </body>
 </html>

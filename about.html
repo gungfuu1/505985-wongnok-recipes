@@ -1,28 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <title>เกี่ยวกับเรา</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>เกี่ยวกับเรา</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="gf-bar gf-light-grey gf-card-4">
-        <a href="index.html" class="gf-bar-item gf-button">หน้าหลัก</a>
-        <a href="about.html" class="gf-bar-item gf-button">About</a>
-        <a href="login.html" class="gf-bar-item gf-button gf-right" id="loginMenu">เข้าสู่ระบบ</a>
-        <a href="register.html" class="gf-bar-item gf-button gf-right">ลงทะเบียน</a>
-        <a href="create_recipe.html" class="gf-bar-item gf-button gf-right" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
-    </div>
+  <div class="gf-menubar gf-light-grey gf-padding">
+    <a href="index.html" class="gf-button">หน้าหลัก</a>
+    <a href="about.html" class="gf-button">About</a>
+    <a href="login.html" class="gf-button" id="loginMenu">เข้าสู่ระบบ</a>
+    <a href="register.html" class="gf-button">ลงทะเบียน</a>
+  </div>
 
-    <div class="gf-content">
-        <h1>เกี่ยวกับเรา</h1>
-        <p>เว็บแชร์เมนูอาหารสำหรับทุกคน</p>
-        <p>วงนอก มีทุกเมนูอาหารที่คุณต้องการ</p>
-    </div>
-
-    <script type="module">
-        import { checkLoginStatus } from './script.js';
-        checkLoginStatus();
-    </script>
+  <div class="gf-container gf-padding">
+    <h2>เกี่ยวกับเรา</h2>
+    <p>เว็บไซต์แชร์เมนูอาหารสำหรับทุกคน</p>
+    <p>วงนอก มีทุกเมนูอาหารที่คุณต้องการ</p>
+  </div>
 </body>
 </html>
