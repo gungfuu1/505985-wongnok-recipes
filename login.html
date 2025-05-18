@@ -2,34 +2,26 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>เข้าสู่ระบบ - GF Food Blog</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="script-non-module.js"></script>
-
-    import { loginUser, checkLoginStatus } from './script.js';
-    window.loginUser = loginUser;
-    document.addEventListener('DOMContentLoaded', checkLoginStatus);
-  </script>
+  <script src="axios.min.js"></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="gf-menubar gf-light-grey gf-padding">
-    <span class="gf-title">GF Food Blog</span>
-    <div class="gf-right">
-      <a href="index.html" class="gf-button">หน้าหลัก</a>
-      <a href="register.html" class="gf-button">ลงทะเบียน</a>
-      <a href="login.html" class="gf-button" id="loginMenu">เข้าสู่ระบบ</a>
-      <a href="create_recipe.html" class="gf-button" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
-      <a href="about.html" class="gf-button">About</a>
-    </div>
+  <div class="gf-bar gf-light-grey gf-card-4">
+    <a href="index.html" class="gf-bar-item gf-button">หน้าหลัก</a>
+    <a href="about.html" class="gf-bar-item gf-button">About</a>
+    <a href="login.html" class="gf-bar-item gf-button gf-right" id="loginMenu">เข้าสู่ระบบ</a>
+    <a href="register.html" class="gf-bar-item gf-button gf-right">ลงทะเบียน</a>
+    <a href="create_recipe.html" class="gf-bar-item gf-button gf-right" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
   </div>
 
-  <div class="gf-container gf-padding" style="max-width:600px;margin:auto">
+  <div class="gf-container gf-padding">
     <h2>เข้าสู่ระบบ</h2>
-    <input id="login-email" class="gf-input gf-border" type="email" placeholder="อีเมล"><br><br>
-    <input id="login-password" class="gf-input gf-border" type="password" placeholder="รหัสผ่าน"><br><br>
-    <button onclick="loginUser()" class="gf-button gf-orange">เข้าสู่ระบบ</button>
+    <input type="email" id="loginEmail" placeholder="Email" class="gf-input gf-border"><br><br>
+    <input type="password" id="loginPassword" placeholder="รหัสผ่าน" class="gf-input gf-border"><br><br>
+    <button id="loginBtn" class="gf-button gf-blue">เข้าสู่ระบบ</button>
+    <p>ยังไม่มีบัญชี? <a href="register.html">ลงทะเบียน</a></p>
   </div>
 </body>
 </html>

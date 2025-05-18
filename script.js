@@ -64,3 +64,127 @@ function registerUser() {
     alert('ลงทะเบียนไม่สำเร็จ');
   });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const loginBtn = document.getElementById('loginBtn');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', loginUser);
+  }
+});
+
+function loginUser() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPassword').value;
+
+  axios.get(`${supabaseUrl}/rest/v1/users`, {
+    headers: {
+      apikey: apiKey,
+      Authorization: `Bearer ${apiKey}`
+    },
+    params: {
+      email: `eq.${email}`,
+      password: `eq.${password}`
+    }
+  })
+  .then(res => {
+    const users = res.data;
+    if (users.length > 0) {
+      localStorage.setItem('user', JSON.stringify(users[0]));
+      alert('เข้าสู่ระบบสำเร็จ');
+      window.location.href = 'index.html';
+    } else {
+      alert('Email หรือ Password ไม่ถูกต้อง');
+    }
+  })
+  .catch(err => {
+    console.error('Login error:', err);
+    alert('เกิดข้อผิดพลาด');
+  });
+}
+
+// สร้างเมนูอาหาร
+document.addEventListener('DOMContentLoaded', () => {
+  const createForm = document.getElementById('createForm');
+  if (createForm) {
+    createForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) return alert('กรุณาเข้าสู่ระบบ');
+
+      const data = {
+        title: document.getElementById('title').value,
+        detail: document.getElementById('detail').value,
+        ingredients: document.getElementById('ingredients').value,
+        steps: document.getElementById('steps').value,
+        cooking_time: parseInt(document.getElementById('cookingTime').value),
+        difficulty: document.getElementById('difficulty').value,
+        image_url: document.getElementById('imageUrl').value,
+        user_id: user.id,
+        created_at: new Date().toISOString()
+      };
+
+      axios.post(`${supabaseUrl}/rest/v1/recipes`, data, {
+        headers: {
+          apikey: apiKey,
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(() => {
+        alert('บันทึกเมนูเรียบร้อยแล้ว');
+        window.location.href = 'profile.html';
+      })
+      .catch(err => {
+        console.error('create error', err);
+        alert('เกิดข้อผิดพลาด');
+      });
+    });
+  }
+
+  const profileSection = document.getElementById('myRecipes');
+  if (profileSection) {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) return (profileSection.innerHTML = 'กรุณาเข้าสู่ระบบ');
+
+    loadUserRecipes(user.id);
+  }
+});
+
+// โหลดเมนูของฉัน
+function loadUserRecipes(userId) {
+  axios.get(`${supabaseUrl}/rest/v1/recipes?user_id=eq.${userId}&order=created_at.desc`, {
+    headers: {
+      apikey: apiKey,
+      Authorization: `Bearer ${apiKey}`
+    }
+  }).then(res => {
+    const html = res.data.map(r => `
+      <div class="gf-third gf-container gf-padding">
+        <div class="gf-card gf-light-grey">
+          <img src="${r.image_url}" style="width:100%">
+          <div class="gf-container">
+            <h4>${r.title}</h4>
+            <p>${r.detail || ''}</p>
+            <button class="gf-button gf-red" onclick="deleteRecipe(${r.id})">ลบ</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('myRecipes').innerHTML = html;
+  });
+}
+
+// ลบเมนู
+function deleteRecipe(id) {
+  if (!confirm('คุณต้องการลบเมนูนี้ใช่หรือไม่?')) return;
+
+  axios.delete(`${supabaseUrl}/rest/v1/recipes?id=eq.${id}`, {
+    headers: {
+      apikey: apiKey,
+      Authorization: `Bearer ${apiKey}`
+    }
+  }).then(() => {
+    alert('ลบเมนูแล้ว');
+    location.reload();
+  });
+}

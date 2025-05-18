@@ -2,52 +2,36 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>สร้างสูตรอาหาร - GF Food Blog</title>
+  <title>สร้างเมนูอาหาร</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="script-non-module.js"></script>
-
-    import { createRecipe, checkLoginStatus } from './script.js';
-    window.createRecipe = createRecipe;
-
-    document.addEventListener('DOMContentLoaded', () => {
-      checkLoginStatus();
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (!user) {
-        alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
-        window.location.href = 'login.html';
-      }
-    });
-  </script>
+  <script src="axios.min.js"></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="gf-menubar gf-light-grey gf-padding">
-    <span class="gf-title">GF Food Blog</span>
-    <div class="gf-right">
-      <a href="index.html" class="gf-button">หน้าหลัก</a>
-      <a href="register.html" class="gf-button">ลงทะเบียน</a>
-      <a href="login.html" class="gf-button" id="loginMenu">เข้าสู่ระบบ</a>
-      <a href="create_recipe.html" class="gf-button" id="createRecipeMenu">สร้างเมนูอาหาร</a>
-      <a href="about.html" class="gf-button">About</a>
-    </div>
+  <div class="gf-bar gf-light-grey gf-card-4">
+    <a href="index.html" class="gf-bar-item gf-button">หน้าหลัก</a>
+    <a href="profile.html" class="gf-bar-item gf-button">โปรไฟล์</a>
+    <a href="login.html" class="gf-bar-item gf-button gf-right" id="loginMenu">เข้าสู่ระบบ</a>
+    <a href="register.html" class="gf-bar-item gf-button gf-right">ลงทะเบียน</a>
+    <a href="create_recipe.html" class="gf-bar-item gf-button gf-right" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
   </div>
 
-  <div class="gf-container gf-padding" style="max-width:600px;margin:auto">
-    <h2>สร้างสูตรอาหารใหม่</h2>
-    <input id="recipe-title" class="gf-input gf-border" type="text" placeholder="ชื่อเมนูอาหาร"><br><br>
-    <textarea id="recipe-detail" class="gf-input gf-border" rows="2" placeholder="รายละเอียดเมนูโดยย่อ"></textarea><br><br>
-    <textarea id="recipe-ingredients" class="gf-input gf-border" rows="3" placeholder="วัตถุดิบ (คั่นด้วย comma)"></textarea><br><br>
-    <textarea id="recipe-steps" class="gf-input gf-border" rows="4" placeholder="ขั้นตอนการทำอาหาร"></textarea><br><br>
-    <input id="recipe-time" class="gf-input gf-border" type="number" placeholder="ระยะเวลาการปรุง (นาที)"><br><br>
-    <select id="recipe-difficulty" class="gf-input gf-border">
-      <option value="">เลือกระดับความยาก</option>
-      <option value="ง่าย">ง่าย</option>
-      <option value="ปานกลาง">ปานกลาง</option>
-      <option value="ยาก">ยาก</option>
-    </select><br><br>
-    <input id="recipe-image" class="gf-input gf-border" type="url" placeholder="ลิงก์รูปภาพเมนูอาหาร"><br><br>
-    <button onclick="createRecipe()" class="gf-button gf-orange">บันทึกสูตรอาหาร</button>
+  <div class="gf-container gf-padding">
+    <h2>สร้างเมนูอาหาร</h2>
+    <form id="createForm">
+      <input type="text" id="title" placeholder="ชื่อเมนู" class="gf-input gf-border" required><br><br>
+      <textarea id="detail" placeholder="รายละเอียด" class="gf-input gf-border"></textarea><br><br>
+      <textarea id="ingredients" placeholder="วัตถุดิบ" class="gf-input gf-border"></textarea><br><br>
+      <textarea id="steps" placeholder="ขั้นตอนการทำ" class="gf-input gf-border"></textarea><br><br>
+      <input type="number" id="cookingTime" placeholder="เวลาปรุง (นาที)" class="gf-input gf-border"><br><br>
+      <select id="difficulty" class="gf-input gf-border">
+        <option value="ง่าย">ง่าย</option>
+        <option value="ปานกลาง">ปานกลาง</option>
+        <option value="ยาก">ยาก</option>
+      </select><br><br>
+      <input type="url" id="imageUrl" placeholder="ลิงก์รูปอาหาร" class="gf-input gf-border"><br><br>
+      <button type="submit" class="gf-button gf-green">บันทึก</button>
+    </form>
   </div>
 </body>
 </html>
