@@ -1,45 +1,37 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self'; 
-        script-src 'self' 'unsafe-eval'; 
-        connect-src 'self' https://asooyypcnuxtaxzosvaa.supabase.co;
-    ">
-
-    <title>Register - GF Food Blog</title>
-    <link rel="stylesheet" href="style.css">
-    <script type="module">
-        import { gfRegister, checkLoginStatus } from './script.js';
-        
-        // ทำให้ฟังก์ชันสามารถเรียกใช้ได้จาก onclick
-        window.gfRegister = gfRegister;
-        
-        // ตรวจสอบสถานะการเข้าสู่ระบบเมื่อโหลดหน้า
-        document.addEventListener('DOMContentLoaded', function() {
-            checkLoginStatus();
-        });
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ลงทะเบียนสมาชิก - GF Food Blog</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module">
+    import { registerUser, checkLoginStatus } from './script.js';
+    window.registerUser = registerUser;
+    document.addEventListener('DOMContentLoaded', checkLoginStatus);
+  </script>
 </head>
 <body>
-    <div class="gf-bar gf-light-grey gf-card-4">
-    <a href="index.html" class="gf-bar-item gf-button">หน้าหลัก</a>
-    <a href="about.html" class="gf-bar-item gf-button">About</a>
-    <a href="login.html" class="gf-bar-item gf-button gf-right" id="loginMenu">เข้าสู่ระบบ</a>
-    <a href="register.html" class="gf-bar-item gf-button gf-right">ลงทะเบียน</a>
-    <a href="create_recipe.html" class="gf-bar-item gf-button gf-right" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
-</div>
-
-    <div class="gf-container gf-padding">
-        <h2>ลงทะเบียน</h2>
-        <input type="text" id="gf-fullname" placeholder="ชื่อ-สกุล" class="gf-input gf-border"><br><br>
-        <input type="number" id="gf-age" placeholder="อายุ" class="gf-input gf-border"><br><br>
-        <input type="text" id="gf-occupation" placeholder="อาชีพ" class="gf-input gf-border"><br><br>
-        <input type="email" id="gf-email" placeholder="Email" class="gf-input gf-border"><br><br>
-        <input type="date" id="gf-birthdate" class="gf-input gf-border"><br><br>
-        <input type="password" id="gf-password" placeholder="รหัสผ่าน" class="gf-input gf-border"><br><br>
-        <button onclick="gfRegister()" class="gf-button gf-blue">ลงทะเบียน</button>
+  <div class="gf-menubar gf-light-grey gf-padding">
+    <span class="gf-title">GF Food Blog</span>
+    <div class="gf-right">
+      <a href="index.html" class="gf-button">หน้าหลัก</a>
+      <a href="register.html" class="gf-button">ลงทะเบียน</a>
+      <a href="login.html" class="gf-button" id="loginMenu">เข้าสู่ระบบ</a>
+      <a href="create_recipe.html" class="gf-button" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
+      <a href="about.html" class="gf-button">About</a>
     </div>
+  </div>
+
+  <div class="gf-container gf-padding" style="max-width:600px;margin:auto">
+    <h2>สมัครสมาชิก</h2>
+    <input id="reg-fullname" class="gf-input gf-border" type="text" placeholder="ชื่อ-สกุล"><br><br>
+    <input id="reg-age" class="gf-input gf-border" type="number" placeholder="อายุ"><br><br>
+    <input id="reg-occupation" class="gf-input gf-border" type="text" placeholder="อาชีพ"><br><br>
+    <input id="reg-email" class="gf-input gf-border" type="email" placeholder="อีเมล"><br><br>
+    <input id="reg-birthdate" class="gf-input gf-border" type="date"><br><br>
+    <input id="reg-password" class="gf-input gf-border" type="password" placeholder="รหัสผ่าน"><br><br>
+    <button onclick="registerUser()" class="gf-button gf-orange">ลงทะเบียน</button>
+  </div>
 </body>
 </html>

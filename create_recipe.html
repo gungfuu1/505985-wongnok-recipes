@@ -3,88 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- CSP สำหรับ Supabase -->
-  <meta http-equiv="Content-Security-Policy" content="
-    default-src 'self';
-    script-src 'self' 'unsafe-eval';
-    connect-src 'self' https://asooyypcnuxtaxzosvaa.supabase.co;
-  ">
-
-  <title>สร้างสูตรอาหาร</title>
+  <title>สร้างสูตรอาหาร - GF Food Blog</title>
   <link rel="stylesheet" href="style.css">
   <script type="module">
     import { createRecipe, checkLoginStatus } from './script.js';
+    window.createRecipe = createRecipe;
 
     document.addEventListener('DOMContentLoaded', () => {
       checkLoginStatus();
-
       const user = JSON.parse(localStorage.getItem('user'));
-      if (!user || !user.id) {
+      if (!user) {
         alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
         window.location.href = 'login.html';
-        return;
       }
-
-      const form = document.getElementById('createRecipeForm');
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-
-        const result = await createRecipe(
-          form.menuName.value,
-          form.description.value,
-          form.ingredients.value,
-          form.steps.value,
-          parseInt(form.cookingTime.value),
-          form.imageUrl.value,
-          user.id
-        );
-
-        if (result) {
-          alert('เพิ่มเมนูสำเร็จ');
-          window.location.href = 'index.html';
-        } else {
-          alert('เกิดข้อผิดพลาด');
-        }
-      });
     });
   </script>
 </head>
 <body>
-
-  <div class="gf-bar gf-light-grey gf-card-4">
-    <a href="index.html" class="gf-bar-item gf-button">หน้าหลัก</a>
-    <a href="about.html" class="gf-bar-item gf-button">About</a>
-    <a href="login.html" class="gf-bar-item gf-button gf-right" id="loginMenu">เข้าสู่ระบบ</a>
-    <a href="register.html" class="gf-bar-item gf-button gf-right">ลงทะเบียน</a>
-    <a href="create_recipe.html" class="gf-bar-item gf-button gf-right" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
+  <div class="gf-menubar gf-light-grey gf-padding">
+    <span class="gf-title">GF Food Blog</span>
+    <div class="gf-right">
+      <a href="index.html" class="gf-button">หน้าหลัก</a>
+      <a href="register.html" class="gf-button">ลงทะเบียน</a>
+      <a href="login.html" class="gf-button" id="loginMenu">เข้าสู่ระบบ</a>
+      <a href="create_recipe.html" class="gf-button" id="createRecipeMenu">สร้างเมนูอาหาร</a>
+      <a href="about.html" class="gf-button">About</a>
+    </div>
   </div>
 
-  <div class="gf-content gf-padding-large" style="max-width:600px; margin:auto; margin-top:50px;">
-    <h2>สร้างสูตรอาหาร</h2>
-
-    <form id="createRecipeForm">
-      <label>ชื่อเมนูอาหาร</label>
-      <input type="text" name="menuName" class="gf-input gf-border" required>
-
-      <label>รายละเอียด</label>
-      <textarea name="description" class="gf-input gf-border" rows="3" required></textarea>
-
-      <label>วัตถุดิบ</label>
-      <textarea name="ingredients" class="gf-input gf-border" rows="4" required></textarea>
-
-      <label>ขั้นตอนการทำ</label>
-      <textarea name="steps" class="gf-input gf-border" rows="4" required></textarea>
-
-      <label>ระยะเวลาการปรุง (นาที)</label>
-      <input type="number" name="cookingTime" class="gf-input gf-border" required>
-
-      <label>รูปภาพประกอบ (URL)</label>
-      <input type="url" name="imageUrl" class="gf-input gf-border" required>
-
-      <button type="submit" class="gf-button gf-green gf-margin-top">บันทึกสูตรอาหาร</button>
-    </form>
+  <div class="gf-container gf-padding" style="max-width:600px;margin:auto">
+    <h2>สร้างสูตรอาหารใหม่</h2>
+    <input id="recipe-title" class="gf-input gf-border" type="text" placeholder="ชื่อเมนูอาหาร"><br><br>
+    <textarea id="recipe-detail" class="gf-input gf-border" rows="2" placeholder="รายละเอียดเมนูโดยย่อ"></textarea><br><br>
+    <textarea id="recipe-ingredients" class="gf-input gf-border" rows="3" placeholder="วัตถุดิบ (คั่นด้วย comma)"></textarea><br><br>
+    <textarea id="recipe-steps" class="gf-input gf-border" rows="4" placeholder="ขั้นตอนการทำอาหาร"></textarea><br><br>
+    <input id="recipe-time" class="gf-input gf-border" type="number" placeholder="ระยะเวลาการปรุง (นาที)"><br><br>
+    <select id="recipe-difficulty" class="gf-input gf-border">
+      <option value="">เลือกระดับความยาก</option>
+      <option value="ง่าย">ง่าย</option>
+      <option value="ปานกลาง">ปานกลาง</option>
+      <option value="ยาก">ยาก</option>
+    </select><br><br>
+    <input id="recipe-image" class="gf-input gf-border" type="url" placeholder="ลิงก์รูปภาพเมนูอาหาร"><br><br>
+    <button onclick="createRecipe()" class="gf-button gf-orange">บันทึกสูตรอาหาร</button>
   </div>
-
 </body>
 </html>

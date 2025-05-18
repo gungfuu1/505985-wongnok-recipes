@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>โปรไฟล์ของฉัน - GF Food Blog</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module">
+    import { loadUserRecipes, deleteRecipe, checkLoginStatus } from './script.js';
+    window.deleteRecipe = deleteRecipe;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      checkLoginStatus();
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) {
+        alert('กรุณาเข้าสู่ระบบ');
+        window.location.href = 'login.html';
+        return;
+      }
+      loadUserRecipes(user.id);
+    });
+  </script>
+</head>
+<body>
+  <div class="gf-menubar gf-light-grey gf-padding">
+    <span class="gf-title">GF Food Blog</span>
+    <div class="gf-right">
+      <a href="index.html" class="gf-button">หน้าหลัก</a>
+      <a href="register.html" class="gf-button">ลงทะเบียน</a>
+      <a href="login.html" class="gf-button" id="loginMenu">เข้าสู่ระบบ</a>
+      <a href="create_recipe.html" class="gf-button" id="createRecipeMenu">สร้างเมนูอาหาร</a>
+      <a href="about.html" class="gf-button">About</a>
+    </div>
+  </div>
+
+  <div class="gf-container gf-padding">
+    <h2>สูตรอาหารของฉัน</h2>
+    <div id="userRecipes" class="gf-row gf-padding-top"></div>
+  </div>
+</body>
+</html>

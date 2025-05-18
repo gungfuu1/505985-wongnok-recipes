@@ -1,33 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="
-        default-src 'self'; 
-        script-src 'self' 'unsafe-eval'; 
-        connect-src 'self' https://asooyypcnuxtaxzosvaa.supabase.co;
-    ">
-    <title>เว็บไซต์แชร์เมนูอาหาร</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" type="module"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GF Food Blog - เมนูอาหาร</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="script.js"></script>
 </head>
 <body>
-    <div class="gf-bar gf-light-grey gf-card-4">
-        <a href="index.html" class="gf-bar-item gf-button">หน้าหลัก</a>
-        <a href="about.html" class="gf-bar-item gf-button">About</a>
-        <a href="login.html" class="gf-bar-item gf-button gf-right" id="loginMenu">เข้าสู่ระบบ</a>
-        <a href="register.html" class="gf-bar-item gf-button gf-right">ลงทะเบียน</a>
-        <a href="create_recipe.html" class="gf-bar-item gf-button gf-right" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
+  <div class="gf-menubar gf-light-grey gf-padding">
+    <span class="gf-title">GF Food Blog</span>
+    <div class="gf-right">
+      <a href="index.html" class="gf-button">หน้าหลัก</a>
+      <a href="register.html" class="gf-button">ลงทะเบียน</a>
+      <a href="login.html" class="gf-button" id="loginMenu">เข้าสู่ระบบ</a>
+      <a href="create_recipe.html" class="gf-button" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
+      <a href="about.html" class="gf-button">About</a>
+    </div>
+  </div>
+
+  <div class="gf-container gf-padding">
+    <div class="gf-row">
+      <input id="searchBox" class="gf-input gf-border" type="text" placeholder="ค้นหาชื่อเมนูหรือวัตถุดิบ...">
+      <select id="filterSelect" class="gf-select gf-border gf-margin-left">
+        <option value="">เรียงตาม...</option>
+        <option value="rating">Rating สูงสุด</option>
+        <option value="user">ชื่อผู้สร้าง</option>
+        <option value="views">ยอดเข้าชม</option>
+        <option value="cooking_time">เวลาปรุง (น้อยสุดก่อน)</option>
+      </select>
     </div>
 
-    <div class="gf-content">
-        <h1>เมนูอาหารแนะนำ</h1>
-        <div id="recipesList"></div>
-    </div>
-
-    <script type="module">
-        import { checkLoginStatus } from './script.js';
-        checkLoginStatus();
-    </script>
+    <div id="recipesList" class="gf-row gf-padding-top"></div>
+  </div>
 </body>
 </html>

@@ -1,158 +1,204 @@
-// กำหนด URL และ API Key สำหรับเชื่อมต่อกับ Supabase
-const supabaseUrl = 'https://asooyypcnuxtaxzosvaa.supabase.co/rest/v1';
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzb295eXBjbnV4dGF4em9zdmFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0Nzk1MjAsImV4cCI6MjA2MzA1NTUyMH0.KUc401gp9ITSU4q_LHKFwzD0LFhL0rUxs-SVk2ZFpTQ';
+// Supabase config
+const supabaseUrl = 'https://kiqgltbzomgteccozsfg.supabase.co';
+const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWdsdGJ6b21ndGVjY296c2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NjAyMjIsImV4cCI6MjA2MzEzNjIyMn0.3wTMcOfYJYXAIshFjhQrpBdFUMS852NUzZNyPpqxbLM';
+const supabase = axios.create({
+  baseURL: supabaseUrl + '/rest/v1',
+  headers: {
+    apikey: apiKey,
+    Authorization: `Bearer ${apiKey}`,
+  },
+});
 
-/**
- * ฟังก์ชันสำหรับเข้าสู่ระบบ
- * ดึงข้อมูลอีเมลและรหัสผ่านจากฟอร์ม แล้วตรวจสอบกับฐานข้อมูล
- */
-export function gfLogin() {
-    // ดึงค่าอีเมลและรหัสผ่านจากฟอร์ม
-    const email = document.getElementById('gf-login-email').value;
-    const password = document.getElementById('gf-login-password').value;
-    
-    // ส่งคำขอไปยัง Supabase API เพื่อตรวจสอบข้อมูลผู้ใช้
-    fetch(`${supabaseUrl}/users?email=eq.${email}&password=eq.${password}`, {
-        headers: {
-            'apikey': apiKey,
-            'Authorization': `Bearer ${apiKey}`
-        }
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.length) {
-            // ถ้าพบข้อมูลผู้ใช้ เก็บข้อมูลลงใน localStorage และนำทางไปยังหน้าหลัก
-            localStorage.setItem('user', JSON.stringify(data[0]));
-            alert('เข้าสู่ระบบสําเร็จ');
-            window.location.href = 'index.html';
-        } else {
-            // ถ้าไม่พบข้อมูลผู้ใช้ แสดงข้อความแจ้งเตือน
-            alert('Email หรือ Password ไม่ถูกต้อง');
-        }
-    });
+// Fetch and display recipes
+async function loadRecipes() {
+  try {
+    const { data, error } = await supabase.get('/recipes?select=*,users(fullname)');
+    if (error) throw error;
+    renderRecipes(data);
+  } catch (err) {
+    console.error('Error fetching recipes:', err);
+  }
 }
 
-/**
- * ฟังก์ชันสำหรับลงทะเบียนผู้ใช้ใหม่
- * ดึงข้อมูลจากฟอร์มลงทะเบียนและส่งไปยังฐานข้อมูล
- */
-export function gfRegister() {
-    // สร้างออบเจกต์ข้อมูลผู้ใช้จากฟอร์ม
-    const data = {
-        fullname: document.getElementById('gf-fullname').value,
-        age: document.getElementById('gf-age').value,
-        occupation: document.getElementById('gf-occupation').value,
-        email: document.getElementById('gf-email').value,
-        birthdate: document.getElementById('gf-birthdate').value,
-        password: document.getElementById('gf-password').value,
-        created_at: new Date().toISOString()
+function renderRecipes(recipes) {
+  const list = document.getElementById('recipesList');
+  list.innerHTML = '';
+  recipes.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'gf-card';
+    card.innerHTML = `
+      <img src="${r.image_url}" alt="${r.title}" />
+      <div class="gf-card-content">
+        <h3>${r.title}</h3>
+        <p>${r.detail}</p>
+        <p>
+          <span class="gf-badge">★ ${r.rating || '-'} </span>
+          <span class="gf-badge">${r.difficulty || 'ระดับ?'}</span>
+        </p>
+        <p class="gf-badge">${r.users?.fullname || 'ไม่ระบุผู้สร้าง'}</p>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+// Search/filter
+document.addEventListener('DOMContentLoaded', () => {
+  checkLoginStatus();
+  loadRecipes();
+
+  document.getElementById('searchBox').addEventListener('input', async e => {
+    const keyword = e.target.value.toLowerCase();
+    const { data } = await supabase.get('/recipes?select=*,users(fullname)');
+    const filtered = data.filter(r =>
+      r.title.toLowerCase().includes(keyword) ||
+      r.ingredients.toLowerCase().includes(keyword)
+    );
+    renderRecipes(filtered);
+  });
+
+  document.getElementById('filterSelect').addEventListener('change', async e => {
+    const value = e.target.value;
+    let url = '/recipes?select=*,users(fullname)';
+    let { data } = await supabase.get(url);
+
+    switch (value) {
+      case 'rating':
+        data.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        break;
+      case 'user':
+        data.sort((a, b) => (a.users?.fullname || '').localeCompare(b.users?.fullname || ''));
+        break;
+      case 'views':
+        data.sort((a, b) => (b.views || 0) - (a.views || 0));
+        break;
+      case 'cooking_time':
+        data.sort((a, b) => (a.cooking_time || 0) - (b.cooking_time || 0));
+        break;
+    }
+    renderRecipes(data);
+  });
+});
+
+// Show/hide menu buttons
+function checkLoginStatus() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const loginBtn = document.getElementById('loginMenu');
+  const createBtn = document.getElementById('createRecipeMenu');
+  if (user) {
+    loginBtn.innerText = 'ออกจากระบบ';
+    loginBtn.onclick = () => {
+      localStorage.removeItem('user');
+      location.reload();
     };
-    
-    // ส่งข้อมูลไปยัง Supabase API เพื่อสร้างผู้ใช้ใหม่
-    fetch(`${supabaseUrl}/users`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'apikey': apiKey,
-            'Authorization': `Bearer ${apiKey}`,
-            'Prefer': 'return=representation'  // ให้ Supabase return ข้อมูลกลับ
-        },
-        body: JSON.stringify(data)
-    })
-    .then(async res => {
-        const text = await res.text(); // อ่าน response เป็นข้อความดิบก่อน
-        let responseData;
-        try {
-            responseData = JSON.parse(text); // พยายาม parse JSON
-        } catch (err) {
-            throw new Error(`ไม่สามารถแปลง response เป็น JSON ได้: ${text}`);
-        }
-
-        if (!res.ok) {
-            throw new Error(JSON.stringify(responseData));
-        }
-
-        alert('ลงทะเบียนสำเร็จ');
-        window.location.href = 'login.html';
-    })
-    .catch(err => {
-        console.error('Register error:', err);
-        alert('ลงทะเบียนไม่สำเร็จ: ' + err.message);
-    });
+    createBtn.style.display = 'inline-block';
+  } else {
+    loginBtn.innerText = 'เข้าสู่ระบบ';
+    loginBtn.onclick = () => location.href = 'login.html';
+    createBtn.style.display = 'none';
+  }
 }
 
-/**
- * ฟังก์ชันสำหรับสร้างสูตรอาหารใหม่
- * @param {string} title - ชื่อเมนูอาหาร
- * @param {string} detail - รายละเอียดเมนูอาหาร
- * @param {string} ingredients - วัตถุดิบ
- * @param {string} steps - ขั้นตอนการทำ
- * @param {string} cookingTime - เวลาที่ใช้ในการทำอาหาร
- * @param {string} imageUrl - URL ของรูปภาพอาหาร
- * @param {number} userId - ID ของผู้ใช้ที่สร้างสูตรอาหาร
- * @returns {Promise} - ข้อมูลสูตรอาหารที่สร้างหรือ null หากเกิดข้อผิดพลาด
- */
-export async function createRecipe(title, detail, ingredients, steps, cookingTime, imageUrl, userId) {
-    try {
-        const response = await fetch(`${supabaseUrl}/recipes`, {
-            method: 'POST',
-            headers: {
-                'apikey': apiKey,
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                title: title,
-                detail: detail,
-                ingredients: ingredients,
-                steps: steps,
-                cooking_time: cookingTime,
-                image_url: imageUrl,
-                user_id: userId,
-                created_at: new Date().toISOString()
-            })
-        });
-        
-        if (!response.ok) throw new Error('เกิดข้อผิดพลาดในการส่งข้อมูล');
-        return await response.json();
-    } catch (error) {
-        console.error(error);
-        return null;
-    }
+// ✅ REGISTER
+export async function registerUser() {
+  const data = {
+    fullname: document.getElementById('reg-fullname').value,
+    age: parseInt(document.getElementById('reg-age').value),
+    occupation: document.getElementById('reg-occupation').value,
+    email: document.getElementById('reg-email').value,
+    birthdate: document.getElementById('reg-birthdate').value,
+    password: document.getElementById('reg-password').value,
+    created_at: new Date().toISOString()
+  };
+  try {
+    await supabase.post('/users', data);
+    alert('ลงทะเบียนสำเร็จ กรุณาเข้าสู่ระบบ');
+    location.href = 'login.html';
+  } catch (err) {
+    alert('เกิดข้อผิดพลาดในการลงทะเบียน');
+    console.error(err);
+  }
 }
 
-/**
- * ฟังก์ชันตรวจสอบสถานะการเข้าสู่ระบบของผู้ใช้
- * ปรับเปลี่ยนการแสดงผลเมนูตามสถานะการเข้าสู่ระบบ
- */
-export function checkLoginStatus() {
-    // ดึงข้อมูลผู้ใช้จาก localStorage
-    const user = JSON.parse(localStorage.getItem('user'));
-    
-    // ดึงอ้างอิงถึงเมนูที่ต้องการปรับเปลี่ยน
-    const createMenu = document.getElementById('createRecipeMenu');
-    const loginMenu = document.getElementById('loginMenu');
-    
-    if (user) {
-        // ถ้าผู้ใช้เข้าสู่ระบบแล้ว
-        if (createMenu) createMenu.style.display = 'inline-block';  // แสดงเมนูสร้างสูตรอาหาร
-        
-        if (loginMenu) {
-            loginMenu.innerText = 'ออกจากระบบ';  // เปลี่ยนข้อความปุ่มเป็น "ออกจากระบบ"
-            loginMenu.onclick = function() {
-                localStorage.removeItem('user');  // ลบข้อมูลผู้ใช้จาก localStorage
-                window.location.href = 'index.html';  // กลับไปยังหน้าหลัก
-            };
-        }
+// ✅ LOGIN
+export async function loginUser() {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  try {
+    const { data } = await supabase.get(`/users?email=eq.${email}&password=eq.${password}`);
+    if (data.length) {
+      localStorage.setItem('user', JSON.stringify(data[0]));
+      alert('เข้าสู่ระบบสำเร็จ');
+      location.href = 'index.html';
     } else {
-        // ถ้าผู้ใช้ยังไม่เข้าสู่ระบบ
-        if (createMenu) createMenu.style.display = 'none';  // ซ่อนเมนูสร้างสูตรอาหาร
-        
-        if (loginMenu) {
-            loginMenu.innerText = 'เข้าสู่ระบบ';  // เปลี่ยนข้อความปุ่มเป็น "เข้าสู่ระบบ"
-            loginMenu.onclick = function() {
-                window.location.href = 'login.html';  // นำทางไปยังหน้าเข้าสู่ระบบ
-            };
-        }
+      alert('อีเมลหรือรหัสผ่านไม่ถูกต้อง');
     }
+  } catch (err) {
+    alert('เกิดข้อผิดพลาดในการเข้าสู่ระบบ');
+    console.error(err);
+  }
+}
+
+// ✅ CREATE RECIPE
+export async function createRecipe() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const data = {
+    user_id: user.id,
+    title: document.getElementById('recipe-title').value,
+    detail: document.getElementById('recipe-detail').value,
+    ingredients: document.getElementById('recipe-ingredients').value,
+    steps: document.getElementById('recipe-steps').value,
+    cooking_time: parseInt(document.getElementById('recipe-time').value),
+    difficulty: document.getElementById('recipe-difficulty').value,
+    image_url: document.getElementById('recipe-image').value,
+    created_at: new Date().toISOString()
+  };
+  try {
+    await supabase.post('/recipes', data);
+    alert('เพิ่มเมนูสำเร็จ');
+    location.href = 'index.html';
+  } catch (err) {
+    alert('เกิดข้อผิดพลาดในการบันทึกเมนู');
+    console.error(err);
+  }
+}
+
+// ✅ LOAD USER RECIPES
+export async function loadUserRecipes(userId) {
+  try {
+    const { data } = await supabase.get(`/recipes?user_id=eq.${userId}`);
+    const list = document.getElementById('userRecipes');
+    list.innerHTML = '';
+    data.forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'gf-card';
+      card.innerHTML = `
+        <img src="${r.image_url}" alt="${r.title}" />
+        <div class="gf-card-content">
+          <h3>${r.title}</h3>
+          <p>${r.detail}</p>
+          <p>
+            <span class="gf-badge">เวลา ${r.cooking_time} นาที</span>
+            <span class="gf-badge">${r.difficulty}</span>
+          </p>
+          <button class="gf-button" onclick="deleteRecipe(${r.id})">ลบ</button>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  } catch (err) {
+    console.error('ไม่สามารถโหลดเมนูของผู้ใช้ได้', err);
+  }
+}
+
+// ✅ DELETE RECIPE
+export async function deleteRecipe(id) {
+  if (!confirm('คุณแน่ใจว่าต้องการลบเมนูนี้?')) return;
+  try {
+    await supabase.delete(`/recipes?id=eq.${id}`);
+    alert('ลบสำเร็จ');
+    location.reload();
+  } catch (err) {
+    console.error('เกิดข้อผิดพลาดในการลบเมนู', err);
+  }
 }

@@ -1,42 +1,100 @@
-.gf-bar {
-    display: flex;
-    justify-content: flex-end;
-    background-color: #f1f1f1;
+/* โทนสีอร่อย */
+body {
+  font-family: 'Kanit', sans-serif;
+  margin: 0;
+  background-color: #fffaf3;
+  color: #333;
 }
 
-.gf-bar-item {
-    padding: 10px;
-    text-decoration: none;
+.gf-menubar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ff7043;
+  padding: 10px 20px;
+  color: white;
 }
 
-.gf-container {
-    max-width: 800px;
-    margin: auto;
+.gf-title {
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .gf-button {
-    padding: 10px;
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    cursor: pointer;
+  background-color: white;
+  border: none;
+  color: #ff7043;
+  padding: 8px 12px;
+  margin-left: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.gf-input {
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
+.gf-button:hover {
+  background-color: #ffe0d5;
 }
 
-.gf-border {
-    border: 1px solid #ccc;
+.gf-container {
+  padding: 20px;
 }
 
-.gf-select {
-    width: 100%;
-    padding: 10px;
+.gf-row {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.gf-hide {
-    display: none;
+.gf-input, .gf-select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.gf-margin-left {
+  margin-left: 10px;
+}
+
+.gf-padding-top {
+  margin-top: 20px;
+}
+
+.gf-card {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  width: 300px;
+  margin: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.gf-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.gf-card-content {
+  padding: 15px;
+}
+
+.gf-card h3 {
+  margin: 0 0 10px 0;
+  color: #e64a19;
+}
+
+.gf-card p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.gf-badge {
+  background-color: #ffa726;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-right: 6px;
 }
