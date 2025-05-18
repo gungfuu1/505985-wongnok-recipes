@@ -1,6 +1,7 @@
 /*
-  Content-Security-Policy: default-src 'self';
-  Content-Security-Policy: script-src 'self' 'unsafe-eval' 'unsafe-inline';
-  Content-Security-Policy: connect-src https://asooyypcnuxtaxzosvaa.supabase.co;
-  Content-Security-Policy: style-src 'self' 'unsafe-inline';
-  Content-Security-Policy: img-src 'self' data: https:;
+  Content-Security-Policy: 
+    default-src 'self'; 
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net;
+    connect-src 'self' https://kiqgltbzomgteccozsfg.supabase.co;
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' data: https:;
