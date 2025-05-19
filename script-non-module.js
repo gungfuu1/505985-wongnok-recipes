@@ -1,6 +1,6 @@
 // === Supabase config ===
 const supabaseUrl = 'https://kiqgltbzomgteccozsfg.supabase.co';
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ตัดทอนเพื่อความปลอดภัย
+const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWdsdGJ6b21ndGVjY296c2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NjAyMjIsImV4cCI6MjA2MzEzNjIyMn0.3wTMcOfYJYXAIshFjhQrpBdFUMS852NUzZNyPpqxbLM'; // ตัดทอนเพื่อความปลอดภัย
 
 // === เช็คสถานะล็อกอิน ===
 function checkLoginStatus() {
