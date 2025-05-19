@@ -22,12 +22,10 @@
 
   <div class="gf-container gf-padding">
     <div class="gf-row">
-      <input id="searchBox" class="gf-input gf-border" type="text" placeholder="ค้นหาชื่อเมนูหรือวัตถุดิบ...">
-      <select id="filterSelect" class="gf-select gf-border gf-margin-left">
+      <input id="searchBox" class="gf-input gf-border" type="text" placeholder="ค้นหาชื่อเมนูหรือวัตถุดิบ..." oninput="loadAllRecipes()">
+<select id="filterSelect" class="gf-select gf-border gf-margin-left" onchange="loadAllRecipes()">
         <option value="">เรียงตาม...</option>
         <option value="rating">Rating สูงสุด</option>
-        <option value="user">ชื่อผู้สร้าง</option>
-        <option value="views">ยอดเข้าชม</option>
         <option value="cooking_time">เวลาปรุง (น้อยสุดก่อน)</option>
       </select>
     </div>

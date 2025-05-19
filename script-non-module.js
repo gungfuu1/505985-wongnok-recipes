@@ -1,7 +1,6 @@
-
 // === Supabase config ===
 const supabaseUrl = 'https://kiqgltbzomgteccozsfg.supabase.co';
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWdsdGJ6b21ndGVjY296c2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NjAyMjIsImV4cCI6MjA2MzEzNjIyMn0.3wTMcOfYJYXAIshFjhQrpBdFUMS852NUzZNyPpqxbLM'; // <--- แก้ไขเป็นของจริงหากตัดสั้น
+const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // ตัดทอนเพื่อความปลอดภัย
 
 // === เช็คสถานะล็อกอิน ===
 function checkLoginStatus() {
@@ -23,17 +22,36 @@ function checkLoginStatus() {
   }
 }
 
-// === โหลดเมนูอาหารทั้งหมด ===
+// === โหลดเมนูอาหารทั้งหมด + search + sort ===
 function loadAllRecipes() {
-  axios.get(`${supabaseUrl}/rest/v1/recipes?select=*,users(fullname),ratings(rating)`, {
+  const keyword = document.getElementById('searchBox')?.value.trim();
+  const sort = document.getElementById('filterSelect')?.value;
 
+  let query = `${supabaseUrl}/rest/v1/recipes?select=*,users(fullname),ratings(rating)`;
+  if (keyword) {
+    query += `&or=(title.ilike.*${keyword}*,ingredients.ilike.*${keyword}*)`;
+  }
+
+  axios.get(query, {
     headers: {
       apikey: apiKey,
       Authorization: `Bearer ${apiKey}`
     }
   }).then(res => {
+    let recipes = res.data;
+
+    if (sort === 'rating') {
+      recipes.sort((a, b) => {
+        const avgA = a.ratings?.reduce((sum, r) => sum + r.rating, 0) / (a.ratings?.length || 1);
+        const avgB = b.ratings?.reduce((sum, r) => sum + r.rating, 0) / (b.ratings?.length || 1);
+        return avgB - avgA;
+      });
+    } else if (sort === 'cooking_time') {
+      recipes.sort((a, b) => (a.cooking_time || 9999) - (b.cooking_time || 9999));
+    }
+
     const list = document.getElementById('recipesList');
-    list.innerHTML = res.data.map(r => {
+    list.innerHTML = recipes.map(r => {
       const ratings = r.ratings || [];
       const avg = ratings.length
         ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)
@@ -42,34 +60,33 @@ function loadAllRecipes() {
       const user = JSON.parse(localStorage.getItem('user'));
       const canRate = user && user.id !== r.user_id;
 
-     return `
-  <div class="gf-third gf-margin-bottom">
-    <div class="gf-card-4 gf-card-fixed">
-      <img src="${r.image_url}" style="width:100%">
-      <div class="gf-container gf-card-body">
-        <div>
-          <h4><b>${r.title}</b></h4>
-          <p class="gf-truncate-3">${r.detail || ''}</p>
+      return `
+        <div class="gf-third gf-margin-bottom">
+          <div class="gf-card-4 gf-card-fixed">
+            <img src="${r.image_url}" style="width:100%">
+            <div class="gf-container gf-card-body">
+              <div>
+                <h4><b>${r.title}</b></h4>
+                <p class="gf-truncate-3">${r.detail || ''}</p>
+              </div>
+              <div>
+                <p>⭐ ${avg} (${ratings.length} โหวต)</p>
+                <p>👤 โดย ${r.users?.fullname || 'ไม่ทราบชื่อ'}</p>
+                ${canRate ? `
+                  <select onchange="submitRating(${r.id}, this.value)">
+                    <option value="">ให้คะแนน</option>
+                    <option value="1">1 ดาว</option>
+                    <option value="2">2 ดาว</option>
+                    <option value="3">3 ดาว</option>
+                    <option value="4">4 ดาว</option>
+                    <option value="5">5 ดาว</option>
+                  </select>
+                ` : ''}
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <p>⭐ ${avg} (${ratings.length} โหวต)</p>
-          <p>👤 โดย ${r.users?.fullname || 'ไม่ทราบชื่อ'}</p>
-          ${canRate ? `
-            <select onchange="submitRating(${r.id}, this.value)">
-              <option value="">ให้คะแนน</option>
-              <option value="1">1 ดาว</option>
-              <option value="2">2 ดาว</option>
-              <option value="3">3 ดาว</option>
-              <option value="4">4 ดาว</option>
-              <option value="5">5 ดาว</option>
-            </select>
-          ` : ''}
-        </div>
-      </div>
-    </div>
-  </div>
-`;
-
+      `;
     }).join('');
   });
 }
@@ -108,22 +125,6 @@ function submitRating(recipeId, value) {
   });
 }
 
-// === เรียกเมื่อโหลด ===
-document.addEventListener('DOMContentLoaded', () => {
-  checkLoginStatus();
-  const recipeList = document.getElementById('recipesList');
-  if (recipeList) {
-    loadAllRecipes();
-
-    document.getElementById('searchBox')?.addEventListener('input', () => {
-      loadAllRecipes();
-    });
-    document.getElementById('filterSelect')?.addEventListener('change', () => {
-      loadAllRecipes();
-    });
-  }
-});
-
 // === ลงทะเบียนผู้ใช้ ===
 function registerUser() {
   const data = {
@@ -153,7 +154,6 @@ function registerUser() {
     alert('ลงทะเบียนไม่สำเร็จ');
   });
 }
-
 
 // === เข้าสู่ระบบ ===
 function loginUser() {
@@ -185,7 +185,6 @@ function loginUser() {
     alert('เกิดข้อผิดพลาด');
   });
 }
-
 
 // === สร้างเมนูอาหาร ===
 document.addEventListener('DOMContentLoaded', () => {
@@ -229,4 +228,15 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('ไม่สามารถบันทึกเมนูได้ กรุณาลองใหม่');
     });
   });
+});
+
+// === เมื่อโหลดหน้า index
+document.addEventListener('DOMContentLoaded', () => {
+  checkLoginStatus();
+
+  if (document.getElementById('recipesList')) {
+    loadAllRecipes();
+    document.getElementById('searchBox')?.addEventListener('input', loadAllRecipes);
+    document.getElementById('filterSelect')?.addEventListener('change', loadAllRecipes);
+  }
 });
