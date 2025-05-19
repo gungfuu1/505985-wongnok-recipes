@@ -49,7 +49,7 @@ function loadAllRecipes() {
       <div class="gf-container gf-card-body">
         <div>
           <h4><b>${r.title}</b></h4>
-          <p>${r.detail || ''}</p>
+          <p class="gf-truncate-3">${r.detail || ''}</p>
         </div>
         <div>
           <p>⭐ ${avg} (${ratings.length} โหวต)</p>

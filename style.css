@@ -81,3 +81,14 @@ body {
   flex-direction: column;
   justify-content: space-between;
 }
+
+.gf-truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;          /* จำกัด 3 บรรทัด บน WebKit (Chrome, Safari) */
+  line-clamp: 3;                  /* (ไม่บังคับ) สำหรับ browser อื่นในอนาคต */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
