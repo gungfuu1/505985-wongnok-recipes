@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>โปรไฟล์ของฉัน - Wongnok Recipes</title>
+  <title>โปรไฟล์ของฉัน</title>
   <link rel="stylesheet" href="style.css">
   <script src="axios.min.js"></script>
   <script src="script-non-module.js"></script>
@@ -10,31 +10,30 @@
 <body>
   <div class="gf-menubar gf-light-grey gf-padding">
     <a href="index.html" class="gf-button">หน้าหลัก</a>
-    <a href="profile.html" class="gf-button" id="profileMenu" style="display:none;">โปรไฟล์</a>
     <a href="create_recipe.html" class="gf-button">สร้างเมนูอาหาร</a>
+    <a href="profile.html" class="gf-button">โปรไฟล์</a>
     <a href="login.html" class="gf-button" id="loginMenu">เข้าสู่ระบบ</a>
-    <a href="register.html" class="gf-button" id="registerMenu">ลงทะเบียน</a>
   </div>
 
   <div class="gf-container gf-padding">
-    <h2>สูตรอาหารของฉัน</h2>
-    <div id="userRecipeList" class="gf-row-padding gf-margin-top"></div>
+    <h2>เมนูอาหารของฉัน</h2>
+    <div id="userRecipeList" class="gf-row-padding gf-margin-top gf-container"></div>
   </div>
 
-  <!-- Modal สำหรับแก้ไข -->
-  <div id="editModal" class="gf-modal" style="display:none">
-    <div class="gf-modal-content gf-card-4" style="max-width:500px; margin:auto; padding:20px">
-      <h3>แก้ไขสูตรอาหาร</h3>
+  <!-- Modal แก้ไขเมนู -->
+  <div id="editModal" class="gf-modal" style="display:none;">
+    <div class="gf-modal-content gf-card-4 gf-padding" style="max-width:600px;margin:auto;">
+      <span onclick="closeEditModal()" class="gf-button gf-red gf-right">&times;</span>
+      <h3>แก้ไขเมนู</h3>
       <form id="editForm">
         <input type="hidden" id="editId">
         <input type="text" id="editTitle" class="gf-input gf-border" placeholder="ชื่อเมนู"><br><br>
         <textarea id="editDetail" class="gf-input gf-border" placeholder="รายละเอียด"></textarea><br><br>
         <textarea id="editIngredients" class="gf-input gf-border" placeholder="วัตถุดิบ"></textarea><br><br>
-        <textarea id="editSteps" class="gf-input gf-border" placeholder="ขั้นตอน"></textarea><br><br>
-        <input type="number" id="editCookingTime" class="gf-input gf-border" placeholder="เวลาปรุง"><br><br>
+        <textarea id="editSteps" class="gf-input gf-border" placeholder="ขั้นตอนการทำ"></textarea><br><br>
+        <input type="number" id="editCookingTime" class="gf-input gf-border" placeholder="เวลาปรุง (นาที)"><br><br>
         <input type="url" id="editImageUrl" class="gf-input gf-border" placeholder="URL รูปภาพ"><br><br>
-        <button type="submit" class="gf-button gf-green">บันทึก</button>
-        <button type="button" class="gf-button gf-red" onclick="closeEditModal()">ยกเลิก</button>
+        <button class="gf-button gf-green" type="submit">บันทึก</button>
       </form>
     </div>
   </div>

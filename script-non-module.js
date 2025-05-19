@@ -146,6 +146,106 @@ function submitRating(recipeId, value) {
   });
 }
 
+
+// โหลดเมนูของฉัน
+function loadUserRecipes() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) return;
+
+  axios.get(`${supabaseUrl}/rest/v1/recipes?user_id=eq.${user.id}&order=created_at.desc`, {
+    headers: {
+      apikey: apiKey,
+      Authorization: `Bearer ${apiKey}`
+    }
+  }).then(res => {
+    const list = document.getElementById('userRecipeList');
+    list.innerHTML = res.data.map(r => `
+      <div class="gf-third gf-container gf-margin-bottom">
+        <div class="gf-card-4">
+          <img src="${r.image_url}" alt="${r.title}" style="width:100%">
+          <div class="gf-container">
+            <h3>${r.title}</h3>
+            <p>${r.detail || ''}</p>
+            <button class="gf-button gf-yellow" onclick='openEditModal(${JSON.stringify(r)})'>แก้ไข</button>
+            <button class="gf-button gf-red" onclick="deleteRecipe(${r.id})">ลบ</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  });
+}
+
+// ลบเมนู
+function deleteRecipe(id) {
+  if (!confirm("ต้องการลบสูตรอาหารนี้ใช่หรือไม่?")) return;
+
+  axios.delete(`${supabaseUrl}/rest/v1/recipes?id=eq.${id}`, {
+    headers: {
+      apikey: apiKey,
+      Authorization: `Bearer ${apiKey}`
+    }
+  }).then(() => {
+    alert("ลบเมนูแล้ว");
+    loadUserRecipes();
+  });
+}
+
+// เปิด modal แก้ไข
+function openEditModal(recipe) {
+  document.getElementById('editModal').style.display = 'block';
+  document.getElementById('editId').value = recipe.id;
+  document.getElementById('editTitle').value = recipe.title;
+  document.getElementById('editDetail').value = recipe.detail;
+  document.getElementById('editIngredients').value = recipe.ingredients;
+  document.getElementById('editSteps').value = recipe.steps;
+  document.getElementById('editCookingTime').value = recipe.cooking_time;
+  document.getElementById('editImageUrl').value = recipe.image_url;
+}
+
+// ปิด modal แก้ไข
+function closeEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
+
+// แก้ไขแล้วบันทึก
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('editForm');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const id = document.getElementById('editId').value;
+      const data = {
+        title: document.getElementById('editTitle').value,
+        detail: document.getElementById('editDetail').value,
+        ingredients: document.getElementById('editIngredients').value,
+        steps: document.getElementById('editSteps').value,
+        cooking_time: parseInt(document.getElementById('editCookingTime').value),
+        image_url: document.getElementById('editImageUrl').value
+      };
+
+      axios.patch(`${supabaseUrl}/rest/v1/recipes?id=eq.${id}`, data, {
+        headers: {
+          apikey: apiKey,
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json'
+        }
+      }).then(() => {
+        alert("อัปเดตเรียบร้อยแล้ว");
+        closeEditModal();
+        loadUserRecipes();
+      });
+    });
+  }
+
+  const list = document.getElementById('userRecipeList');
+  if (list) {
+    loadUserRecipes();
+  }
+});
+
+
+
 // === เรียกเมื่อโหลด ===
 document.addEventListener('DOMContentLoaded', () => {
   checkLoginStatus();
