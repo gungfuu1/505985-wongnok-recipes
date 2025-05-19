@@ -178,3 +178,48 @@ function loginUser() {
     alert('เกิดข้อผิดพลาด');
   });
 }
+
+
+// === สร้างเมนูอาหาร ===
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('createRecipeForm');
+  if (!form) return;
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      alert('กรุณาเข้าสู่ระบบก่อนสร้างเมนู');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const data = {
+      title: document.getElementById('title').value,
+      detail: document.getElementById('detail').value,
+      ingredients: document.getElementById('ingredients').value,
+      steps: document.getElementById('steps').value,
+      cooking_time: parseInt(document.getElementById('cookingTime').value),
+      difficulty: document.getElementById('difficulty').value,
+      image_url: document.getElementById('imageUrl').value,
+      user_id: user.id,
+      created_at: new Date().toISOString()
+    };
+
+    axios.post(`${supabaseUrl}/rest/v1/recipes`, data, {
+      headers: {
+        apikey: apiKey,
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=representation'
+      }
+    }).then(() => {
+      alert('เพิ่มเมนูอาหารสำเร็จ');
+      window.location.href = 'profile.html';
+    }).catch(err => {
+      console.error('createRecipe error', err);
+      alert('ไม่สามารถบันทึกเมนูได้ กรุณาลองใหม่');
+    });
+  });
+});
