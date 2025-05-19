@@ -7,17 +7,27 @@ function checkLoginStatus() {
   const user = JSON.parse(localStorage.getItem('user'));
   const loginMenu = document.getElementById('loginMenu');
   const createMenu = document.getElementById('createRecipeMenu');
+  const registerMenu = document.getElementById('registerMenu');
+  const profileMenu = document.getElementById('profileMenu');
+
   if (user) {
+    // เปลี่ยนปุ่ม login เป็น logout
     loginMenu.textContent = 'ออกจากระบบ';
     loginMenu.onclick = () => {
       localStorage.removeItem('user');
       location.href = 'index.html';
     };
+
     if (createMenu) createMenu.style.display = 'inline-block';
+    if (registerMenu) registerMenu.style.display = 'none';
+    if (profileMenu) profileMenu.style.display = 'inline-block';
   } else {
     loginMenu.textContent = 'เข้าสู่ระบบ';
     loginMenu.onclick = () => location.href = 'login.html';
+
     if (createMenu) createMenu.style.display = 'none';
+    if (registerMenu) registerMenu.style.display = 'inline-block';
+    if (profileMenu) profileMenu.style.display = 'none';
   }
 }
 
