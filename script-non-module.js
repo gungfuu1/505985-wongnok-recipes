@@ -116,3 +116,65 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+// === ลงทะเบียนผู้ใช้ ===
+function registerUser() {
+  const data = {
+    fullname: document.getElementById('gf-fullname').value,
+    age: parseInt(document.getElementById('gf-age').value),
+    occupation: document.getElementById('gf-occupation').value,
+    email: document.getElementById('gf-email').value,
+    birthdate: document.getElementById('gf-birthdate').value,
+    password: document.getElementById('gf-password').value,
+    created_at: new Date().toISOString()
+  };
+
+  axios.post(`${supabaseUrl}/rest/v1/users`, data, {
+    headers: {
+      apikey: apiKey,
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation'
+    }
+  })
+  .then(() => {
+    alert('ลงทะเบียนสำเร็จ');
+    window.location.href = 'login.html';
+  })
+  .catch(err => {
+    console.error('Register error:', err);
+    alert('ลงทะเบียนไม่สำเร็จ');
+  });
+}
+
+
+// === เข้าสู่ระบบ ===
+function loginUser() {
+  const email = document.getElementById('gf-login-email').value;
+  const password = document.getElementById('gf-login-password').value;
+
+  axios.get(`${supabaseUrl}/rest/v1/users`, {
+    headers: {
+      apikey: apiKey,
+      Authorization: `Bearer ${apiKey}`
+    },
+    params: {
+      email: `eq.${email}`,
+      password: `eq.${password}`
+    }
+  })
+  .then(res => {
+    const users = res.data;
+    if (users.length > 0) {
+      localStorage.setItem('user', JSON.stringify(users[0]));
+      alert('เข้าสู่ระบบสำเร็จ');
+      window.location.href = 'index.html';
+    } else {
+      alert('Email หรือ Password ไม่ถูกต้อง');
+    }
+  })
+  .catch(err => {
+    console.error('Login error:', err);
+    alert('เกิดข้อผิดพลาด');
+  });
+}
