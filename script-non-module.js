@@ -24,15 +24,10 @@ function checkLoginStatus() {
 
 // === โหลดเมนูอาหารทั้งหมด + search + sort ===
 function loadAllRecipes() {
-  const keyword = document.getElementById('searchBox')?.value.trim();
-  const sort = document.getElementById('filterSelect')?.value;
+  const keyword = document.getElementById('searchBox')?.value?.toLowerCase() || '';
+  const filter = document.getElementById('filterSelect')?.value || '';
 
-  let query = `${supabaseUrl}/rest/v1/recipes?select=*,users(fullname),ratings(rating)`;
-  if (keyword) {
-    query += `&or=(title.ilike.*${keyword}*,ingredients.ilike.*${keyword}*)`;
-  }
-
-  axios.get(query, {
+  axios.get(`${supabaseUrl}/rest/v1/recipes?select=*,users(fullname),ratings(rating)`, {
     headers: {
       apikey: apiKey,
       Authorization: `Bearer ${apiKey}`
@@ -40,14 +35,23 @@ function loadAllRecipes() {
   }).then(res => {
     let recipes = res.data;
 
-    if (sort === 'rating') {
+    // ค้นหา keyword (title หรือ ingredients)
+    if (keyword) {
+      recipes = recipes.filter(r =>
+        r.title?.toLowerCase().includes(keyword) ||
+        r.ingredients?.toLowerCase().includes(keyword)
+      );
+    }
+
+    // เรียงลำดับ
+    if (filter === 'rating') {
       recipes.sort((a, b) => {
-        const avgA = a.ratings?.reduce((sum, r) => sum + r.rating, 0) / (a.ratings?.length || 1);
-        const avgB = b.ratings?.reduce((sum, r) => sum + r.rating, 0) / (b.ratings?.length || 1);
-        return avgB - avgA;
+        const aAvg = a.ratings?.length ? a.ratings.reduce((sum, r) => sum + r.rating, 0) / a.ratings.length : 0;
+        const bAvg = b.ratings?.length ? b.ratings.reduce((sum, r) => sum + r.rating, 0) / b.ratings.length : 0;
+        return bAvg - aAvg; // มากไปน้อย
       });
-    } else if (sort === 'cooking_time') {
-      recipes.sort((a, b) => (a.cooking_time || 9999) - (b.cooking_time || 9999));
+    } else if (filter === 'cooking_time') {
+      recipes.sort((a, b) => a.cooking_time - b.cooking_time); // น้อยไปมาก
     }
 
     const list = document.getElementById('recipesList');
