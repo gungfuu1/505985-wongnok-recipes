@@ -64,3 +64,20 @@ body {
   margin: 10% auto;
   padding: 20px;
 }
+.gf-card-fixed {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.gf-card-fixed img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.gf-card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
