@@ -245,6 +245,38 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+// === เข้าสู่ระบบ ===
+function loginUser() {
+  const email = document.getElementById('gf-login-email').value;
+  const password = document.getElementById('gf-login-password').value;
+
+  axios.get(`${supabaseUrl}/rest/v1/users`, {
+    headers: {
+      apikey: apiKey,
+      Authorization: `Bearer ${apiKey}`
+    },
+    params: {
+      email: `eq.${email}`,
+      password: `eq.${password}`
+    }
+  })
+  .then(res => {
+    const users = res.data;
+    if (users.length > 0) {
+      localStorage.setItem('user', JSON.stringify(users[0]));
+      alert('เข้าสู่ระบบสำเร็จ');
+      window.location.href = 'index.html';
+    } else {
+      alert('Email หรือ Password ไม่ถูกต้อง');
+    }
+  })
+  .catch(err => {
+    console.error('Login error:', err);
+    alert('เกิดข้อผิดพลาด');
+  });
+}
+
+
 
 // === เรียกเมื่อโหลด ===
 document.addEventListener('DOMContentLoaded', () => {
