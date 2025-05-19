@@ -1,13 +1,12 @@
 // === Supabase config ===
 const supabaseUrl = 'https://kiqgltbzomgteccozsfg.supabase.co';
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWdsdGJ6b21ndGVjY296c2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NjAyMjIsImV4cCI6MjA2MzEzNjIyMn0.3wTMcOfYJYXAIshFjhQrpBdFUMS852NUzZNyPpqxbLM'; // ตัดทอนเพื่อความปลอดภัย
+const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWdsdGJ6b21ndGVjY296c2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NjAyMjIsImV4cCI6MjA2MzEzNjIyMn0.3wTMcOfYJYXAIshFjhQrpBdFUMS852NUzZNyPpqxbLM';
 
 // === เช็คสถานะล็อกอิน ===
 function checkLoginStatus() {
   const user = JSON.parse(localStorage.getItem('user'));
   const loginMenu = document.getElementById('loginMenu');
   const createMenu = document.getElementById('createRecipeMenu');
-
   if (user) {
     loginMenu.textContent = 'ออกจากระบบ';
     loginMenu.onclick = () => {
@@ -22,48 +21,54 @@ function checkLoginStatus() {
   }
 }
 
-// === โหลดเมนูอาหารทั้งหมด + search + sort ===
-function loadAllRecipes() {
-  const keyword = document.getElementById('searchBox')?.value?.toLowerCase() || '';
-  const filter = document.getElementById('filterSelect')?.value || '';
+// === โหลดเมนูอาหารทั้งหมด ===
+async function loadAllRecipes() {
+  try {
+    const keyword = document.getElementById('searchBox')?.value?.toLowerCase() || '';
+    const filter = document.getElementById('filterSelect')?.value || '';
 
-  axios.get(`${supabaseUrl}/rest/v1/recipes?select=*,users(fullname),ratings(rating)`, {
-    headers: {
-      apikey: apiKey,
-      Authorization: `Bearer ${apiKey}`
-    }
-  }).then(res => {
+    const res = await axios.get(`${supabaseUrl}/rest/v1/recipes?select=*,users(fullname),ratings(rating)`, {
+      headers: {
+        apikey: apiKey,
+        Authorization: `Bearer ${apiKey}`
+      }
+    });
+
+    if (!res.data) throw new Error('ไม่พบข้อมูล');
+
     let recipes = res.data;
 
-    // ค้นหา keyword (title หรือ ingredients)
+    // Filter ด้วย keyword
     if (keyword) {
       recipes = recipes.filter(r =>
-        r.title?.toLowerCase().includes(keyword) ||
-        r.ingredients?.toLowerCase().includes(keyword)
+        (r.title && r.title.toLowerCase().includes(keyword)) ||
+        (r.ingredients && r.ingredients.toLowerCase().includes(keyword)) ||
+        (r.users?.fullname && r.users.fullname.toLowerCase().includes(keyword))
       );
     }
 
-    // เรียงลำดับ
-    if (filter === 'rating') {
-      recipes.sort((a, b) => {
-        const aAvg = a.ratings?.length ? a.ratings.reduce((sum, r) => sum + r.rating, 0) / a.ratings.length : 0;
-        const bAvg = b.ratings?.length ? b.ratings.reduce((sum, r) => sum + r.rating, 0) / b.ratings.length : 0;
-        return bAvg - aAvg; // มากไปน้อย
-      });
-    } else if (filter === 'cooking_time') {
-      recipes.sort((a, b) => a.cooking_time - b.cooking_time); // น้อยไปมาก
-    }
-
-    const list = document.getElementById('recipesList');
-    list.innerHTML = recipes.map(r => {
+    // คำนวณ rating
+    recipes = recipes.map(r => {
       const ratings = r.ratings || [];
       const avg = ratings.length
-        ? (ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)
-        : "ยังไม่มี";
+        ? ratings.reduce((sum, it) => sum + it.rating, 0) / ratings.length
+        : 0;
+      return { ...r, rating_avg: avg };
+    });
 
+    // Sort
+    if (filter === 'rating') {
+      recipes.sort((a, b) => b.rating_avg - a.rating_avg);
+    } else if (filter === 'cooking_time') {
+      recipes.sort((a, b) => a.cooking_time - b.cooking_time);
+    }
+
+    // Render
+    const list = document.getElementById('recipesList');
+    list.innerHTML = recipes.map(r => {
+      const avg = r.rating_avg ? r.rating_avg.toFixed(1) : "ยังไม่มี";
       const user = JSON.parse(localStorage.getItem('user'));
       const canRate = user && user.id !== r.user_id;
-
       return `
         <div class="gf-third gf-margin-bottom">
           <div class="gf-card-4 gf-card-fixed">
@@ -74,7 +79,7 @@ function loadAllRecipes() {
                 <p class="gf-truncate-3">${r.detail || ''}</p>
               </div>
               <div>
-                <p>⭐ ${avg} (${ratings.length} โหวต)</p>
+                <p>⭐ ${avg} (${r.ratings?.length || 0} โหวต)</p>
                 <p>👤 โดย ${r.users?.fullname || 'ไม่ทราบชื่อ'}</p>
                 ${canRate ? `
                   <select onchange="submitRating(${r.id}, this.value)">
@@ -84,15 +89,17 @@ function loadAllRecipes() {
                     <option value="3">3 ดาว</option>
                     <option value="4">4 ดาว</option>
                     <option value="5">5 ดาว</option>
-                  </select>
-                ` : ''}
+                  </select>` : ''}
               </div>
             </div>
           </div>
         </div>
       `;
     }).join('');
-  });
+
+  } catch (err) {
+    console.error("loadAllRecipes error", err);
+  }
 }
 
 // === ส่งคะแนนเมนู ===
@@ -129,116 +136,11 @@ function submitRating(recipeId, value) {
   });
 }
 
-// === ลงทะเบียนผู้ใช้ ===
-function registerUser() {
-  const data = {
-    fullname: document.getElementById('gf-fullname').value,
-    age: parseInt(document.getElementById('gf-age').value),
-    occupation: document.getElementById('gf-occupation').value,
-    email: document.getElementById('gf-email').value,
-    birthdate: document.getElementById('gf-birthdate').value,
-    password: document.getElementById('gf-password').value,
-    created_at: new Date().toISOString()
-  };
-
-  axios.post(`${supabaseUrl}/rest/v1/users`, data, {
-    headers: {
-      apikey: apiKey,
-      Authorization: `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=representation'
-    }
-  })
-  .then(() => {
-    alert('ลงทะเบียนสำเร็จ');
-    window.location.href = 'login.html';
-  })
-  .catch(err => {
-    console.error('Register error:', err);
-    alert('ลงทะเบียนไม่สำเร็จ');
-  });
-}
-
-// === เข้าสู่ระบบ ===
-function loginUser() {
-  const email = document.getElementById('gf-login-email').value;
-  const password = document.getElementById('gf-login-password').value;
-
-  axios.get(`${supabaseUrl}/rest/v1/users`, {
-    headers: {
-      apikey: apiKey,
-      Authorization: `Bearer ${apiKey}`
-    },
-    params: {
-      email: `eq.${email}`,
-      password: `eq.${password}`
-    }
-  })
-  .then(res => {
-    const users = res.data;
-    if (users.length > 0) {
-      localStorage.setItem('user', JSON.stringify(users[0]));
-      alert('เข้าสู่ระบบสำเร็จ');
-      window.location.href = 'index.html';
-    } else {
-      alert('Email หรือ Password ไม่ถูกต้อง');
-    }
-  })
-  .catch(err => {
-    console.error('Login error:', err);
-    alert('เกิดข้อผิดพลาด');
-  });
-}
-
-// === สร้างเมนูอาหาร ===
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('createRecipeForm');
-  if (!form) return;
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (!user) {
-      alert('กรุณาเข้าสู่ระบบก่อนสร้างเมนู');
-      window.location.href = 'login.html';
-      return;
-    }
-
-    const data = {
-      title: document.getElementById('title').value,
-      detail: document.getElementById('detail').value,
-      ingredients: document.getElementById('ingredients').value,
-      steps: document.getElementById('steps').value,
-      cooking_time: parseInt(document.getElementById('cookingTime').value),
-      difficulty: document.getElementById('difficulty').value,
-      image_url: document.getElementById('imageUrl').value,
-      user_id: user.id,
-      created_at: new Date().toISOString()
-    };
-
-    axios.post(`${supabaseUrl}/rest/v1/recipes`, data, {
-      headers: {
-        apikey: apiKey,
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=representation'
-      }
-    }).then(() => {
-      alert('เพิ่มเมนูอาหารสำเร็จ');
-      window.location.href = 'profile.html';
-    }).catch(err => {
-      console.error('createRecipe error', err);
-      alert('ไม่สามารถบันทึกเมนูได้ กรุณาลองใหม่');
-    });
-  });
-});
-
-// === เมื่อโหลดหน้า index
+// === เรียกเมื่อโหลด ===
 document.addEventListener('DOMContentLoaded', () => {
   checkLoginStatus();
-
-  if (document.getElementById('recipesList')) {
+  const recipeList = document.getElementById('recipesList');
+  if (recipeList) {
     loadAllRecipes();
     document.getElementById('searchBox')?.addEventListener('input', loadAllRecipes);
     document.getElementById('filterSelect')?.addEventListener('change', loadAllRecipes);
