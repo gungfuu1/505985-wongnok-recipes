@@ -7,14 +7,13 @@
 </head>
 <body>
   <div class="gf-menubar gf-light-grey gf-padding">
-    <span class="gf-title">GF Food Blog</span>
+    <span class="gf-title">"Wongnok Recipes"</span>
     <div class="gf-right">
       <a href="index.html" class="gf-button">หน้าหลัก</a>
       <a href="register.html" class="gf-button" id="registerMenu">ลงทะเบียน</a>
       <a href="profile.html" class="gf-button" id="profileMenu" style="display:none;">โปรไฟล์</a>
       <a href="login.html" class="gf-button" id="loginMenu">เข้าสู่ระบบ</a>
       <a href="create_recipe.html" class="gf-button" id="createRecipeMenu" style="display:none;">สร้างเมนูอาหาร</a>
-      
     </div>
   </div>
 
@@ -23,5 +22,14 @@
     <p>เว็บไซต์แชร์เมนูอาหารสำหรับทุกคน</p>
     <p>วงนอก มีทุกเมนูอาหารที่คุณต้องการ</p>
   </div>
+
+  <!-- เรียก JS -->
+  <script src="axios.min.js"></script>
+  <script src="script-non-module.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      checkLoginStatus();
+    });
+  </script>
 </body>
 </html>
