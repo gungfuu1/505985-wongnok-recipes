@@ -80,31 +80,22 @@ async function loadAllRecipes() {
       const user = JSON.parse(localStorage.getItem('user'));
       const canRate = user && user.id !== r.user_id;
       return `
-        <div class="gf-third gf-margin-bottom">
-          <div class="gf-card-4 gf-card-fixed">
-            <img src="${r.image_url}" style="width:100%">
-            <div class="gf-container gf-card-body">
-              <div>
-                <h4><b>${r.title}</b></h4>
-                <p class="gf-truncate-3">${r.detail || ''}</p>
-              </div>
-              <div>
-                <p>⭐ ${avg} (${r.ratings?.length || 0} โหวต)</p>
-                <p>👤 โดย ${r.users?.fullname || 'ไม่ทราบชื่อ'}</p>
-                ${canRate ? `
-                  <select onchange="submitRating(${r.id}, this.value)">
-                    <option value="">ให้คะแนน</option>
-                    <option value="1">1 ดาว</option>
-                    <option value="2">2 ดาว</option>
-                    <option value="3">3 ดาว</option>
-                    <option value="4">4 ดาว</option>
-                    <option value="5">5 ดาว</option>
-                  </select>` : ''}
-              </div>
-            </div>
-          </div>
+  <div class="gf-third gf-margin-bottom">
+    <div class="gf-card-4 gf-card-fixed" onclick="window.location.href='recipe_detail.html?id=${r.id}'" style="cursor:pointer">
+      <img src="${r.image_url}" style="width:100%">
+      <div class="gf-container gf-card-body">
+        <div>
+          <h4><b>${r.title}</b></h4>
+          <p class="gf-truncate-3">${r.detail || ''}</p>
         </div>
-      `;
+        <div>
+          <p>⭐ ${avg} (${r.ratings?.length || 0} โหวต)</p>
+          <p>👤 โดย ${r.users?.fullname || 'ไม่ทราบชื่อ'}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+`;
     }).join('');
 
   } catch (err) {

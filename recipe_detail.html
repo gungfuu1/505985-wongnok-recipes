@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>รายละเอียดเมนูอาหาร</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="axios.min.js"></script>
+  <script>
+    const supabaseUrl = 'https://kiqgltbzomgteccozsfg.supabase.co';
+    const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWdsdGJ6b21ndGVjY296c2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NjAyMjIsImV4cCI6MjA2MzEzNjIyMn0.3wTMcOfYJYXAIshFjhQrpBdFUMS852NUzZNyPpqxbLM'; // เปลี่ยนเป็น apiKey จริง
+
+    async function loadRecipeDetail() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      if (!id) return;
+
+      const res = await axios.get(`${supabaseUrl}/rest/v1/recipes?id=eq.${id}&select=*,users(fullname)`, {
+        headers: {
+          apikey: apiKey,
+          Authorization: `Bearer ${apiKey}`
+        }
+      });
+
+      const recipe = res.data?.[0];
+      if (!recipe) {
+        document.getElementById('detailContainer').innerHTML = '<p>ไม่พบเมนูนี้</p>';
+        return;
+      }
+
+      document.getElementById('detailContainer').innerHTML = `
+        <h2>${recipe.title}</h2>
+        <img src="${recipe.image_url}" style="width:100%; max-width:600px">
+        <p><b>โดย:</b> ${recipe.users?.fullname || 'ไม่ทราบชื่อ'}</p>
+        <p><b>รายละเอียด:</b> ${recipe.detail || '-'}</p>
+        <p><b>วัตถุดิบ:</b><br>${recipe.ingredients?.replace(/\n/g, '<br>')}</p>
+        <p><b>ขั้นตอนการทำ:</b><br>${recipe.steps?.replace(/\n/g, '<br>')}</p>
+        <p><b>เวลาในการปรุง:</b> ${recipe.cooking_time || '-'} นาที</p>
+        <p><b>ระดับความยาก:</b> ${recipe.difficulty || '-'}</p>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', loadRecipeDetail);
+  </script>
+</head>
+<body>
+  <div class="gf-menubar gf-light-grey gf-padding">
+    <a href="index.html" class="gf-button">หน้าหลัก</a>
+  </div>
+  <div class="gf-container gf-padding" id="detailContainer">กำลังโหลด...</div>
+</body>
+</html>
