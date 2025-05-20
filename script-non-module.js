@@ -140,18 +140,21 @@ function loadUserRecipes() {
       return;
     }
     list.innerHTML = res.data.map(r => `
-      <div class="gf-third gf-container gf-margin-bottom">
-        <div class="gf-card-4">
-          <img src="${r.image_url}" alt="${r.title}" style="width:100%">
-          <div class="gf-container">
-            <h3>${r.title}</h3>
-            <p>${r.detail || ''}</p>
-            <button class="gf-button gf-yellow" onclick='openEditModal(${JSON.stringify(r)})'>แก้ไข</button>
-            <button class="gf-button gf-red" onclick="deleteRecipe(${r.id})">ลบ</button>
-          </div>
+  <div class="gf-third gf-container gf-margin-bottom">
+    <a href="recipe_detail.html?id=${r.id}" style="text-decoration:none; color:inherit;">
+      <div class="gf-card-4" >
+        <img src="${r.image_url}" alt="${r.title}" style="width:100%">
+        <div class="gf-container">
+          <h3>${r.title}</h3>
+          <p>${r.detail || ''}</p>
         </div>
       </div>
-    `).join('');
+    </a>
+    <button class="gf-button gf-yellow" onclick='openEditModal(${JSON.stringify(r)})'>แก้ไข</button>
+    <button class="gf-button gf-red" onclick="deleteRecipe(${r.id})">ลบ</button>
+  </div>
+`).join('');
+
   }).catch(err => {
     console.error('loadUserRecipes error', err);
   });
