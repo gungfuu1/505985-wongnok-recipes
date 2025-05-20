@@ -48,8 +48,8 @@ body {
 .gf-third {
   width: 33.3333%;
   float: left;
+  padding: 0 8px;
   box-sizing: border-box;
-  padding: 8px;
 }
 
 .gf-row::after {

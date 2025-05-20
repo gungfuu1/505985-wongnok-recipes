@@ -24,8 +24,8 @@
     <hr>
     <div id="otherRecipesByUser">
       <h3>เมนูอื่น ๆ จากผู้ใช้เดียวกัน</h3>
-      <div id="relatedRecipes" class="gf-row-padding gf-margin-top"></div>
-    </div>
+      <div id="relatedRecipes" class="gf-row gf-padding"></div>
+
   </div>
 
   <script>
@@ -111,34 +111,26 @@ async function loadOtherMenus(userId, excludeId) {
     );
 
     // จัดเรียงตาม rating แล้วเลือก 3 รายการ
-    const sorted = (data || [])
-      .map(r => {
-        const ratings = r.ratings || [];
-        const avg = ratings.length
-          ? ratings.reduce((sum, x) => sum + x.rating, 0) / ratings.length
-          : 0;
-        return { ...r, rating_avg: avg };
-      })
-      .sort((a, b) => b.rating_avg - a.rating_avg)
-      .slice(0, 3);
+const sorted = data.map(r => {
+  const ratings = r.ratings || [];
+  const avg = ratings.length ? ratings.reduce((sum, x) => sum + x.rating, 0) / ratings.length : 0;
+  return { ...r, rating_avg: avg };
+}).sort((a, b) => b.rating_avg - a.rating_avg).slice(0, 3);
 
-    const html = sorted
-      .map(
-        r => `
-      <div class="gf-third gf-container gf-margin-bottom">
-        <div class="gf-card-4">
-          <img src="${r.image_url}" style="width:100%">
-          <div class="gf-container">
-            <h4>${r.title}</h4>
-            <a href="recipe_detail.html?id=${r.id}" class="gf-button">ดูเพิ่มเติม</a>
-          </div>
-        </div>
-      </div>`
-      )
-      .join("");
+const html = sorted.map(r => `
+  <div class="gf-third gf-margin-bottom">
+    <div class="gf-card-4 gf-card-fixed">
+      <img src="${r.image_url}" style="width:100%">
+      <div class="gf-container gf-card-body">
+        <h4>${r.title}</h4>
+        <a href="recipe_detail.html?id=${r.id}" class="gf-button">ดูเพิ่มเติม</a>
+      </div>
+    </div>
+  </div>
+`).join('');
 
-    document.getElementById("relatedRecipes").innerHTML =
-      html || "<p>ไม่มีเมนูอื่น</p>";
+document.getElementById('relatedRecipes').innerHTML = html || '<p>ไม่มีเมนูอื่น</p>';
+
   } catch (err) {
     console.error("loadOtherMenus error", err);
   }

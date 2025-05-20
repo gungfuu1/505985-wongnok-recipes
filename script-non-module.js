@@ -131,19 +131,22 @@ function loadUserRecipes() {
     }
   }).then(res => {
     const list = document.getElementById('userRecipeList');
-    list.innerHTML = res.data.map(r => `
-      <div class="gf-third gf-container gf-margin-bottom">
-        <div class="gf-card-4">
-          <img src="${r.image_url}" style="width:100%">
-          <div class="gf-container">
-            <h3>${r.title}</h3>
-            <p>${r.detail || ''}</p>
-            <button class="gf-button gf-yellow" onclick='openEditModal(${JSON.stringify(r)})'>แก้ไข</button>
-            <button class="gf-button gf-red" onclick="deleteRecipe(${r.id})">ลบ</button>
-          </div>
+    list.innerHTML = recipes.map(r => `
+  <div class="gf-third gf-margin-bottom">
+    <div class="gf-card-4 gf-card-fixed">
+      <a href="recipe_detail.html?id=${r.id}" style="text-decoration:none;color:inherit">
+        <img src="${r.image_url}" style="width:100%">
+        <div class="gf-container gf-card-body">
+          <h4><b>${r.title}</b></h4>
+          <p class="gf-truncate-3">${r.detail || ''}</p>
+          <p>⭐ ${avg} (${r.ratings?.length || 0} โหวต)</p>
+          <p>👤 โดย ${r.users?.fullname || 'ไม่ทราบชื่อ'}</p>
         </div>
-      </div>
-    `).join('');
+      </a>
+    </div>
+  </div>
+`).join('');
+
   });
 }
 
