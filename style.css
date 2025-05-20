@@ -91,4 +91,9 @@ body {
   text-overflow: ellipsis;
 }
 
+.gf-row {
+  display: flex;
+  gap: 8px; /* ระยะห่างระหว่างช่อง search/filter */
+  flex-wrap: wrap;
+}
 
