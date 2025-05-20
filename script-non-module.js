@@ -276,6 +276,36 @@ function loginUser() {
   });
 }
 
+// ลงทะเบียน
+function registerUser() {
+  const data = {
+    fullname: document.getElementById('gf-fullname').value,
+    age: parseInt(document.getElementById('gf-age').value),
+    occupation: document.getElementById('gf-occupation').value,
+    email: document.getElementById('gf-email').value,
+    birthdate: document.getElementById('gf-birthdate').value,
+    password: document.getElementById('gf-password').value,
+    created_at: new Date().toISOString()
+  };
+
+  axios.post(`${supabaseUrl}/rest/v1/users`, data, {
+    headers: {
+      apikey: apiKey,
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=representation'
+    }
+  })
+  .then(() => {
+    alert('ลงทะเบียนสำเร็จ');
+    window.location.href = 'login.html';
+  })
+  .catch(err => {
+    console.error('Register error:', err);
+    alert('ลงทะเบียนไม่สำเร็จ');
+  });
+}
+
 
 
 // === เรียกเมื่อโหลด ===
