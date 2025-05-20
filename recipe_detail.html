@@ -29,115 +29,120 @@
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const recipeId = params.get('id');
+  const params = new URLSearchParams(window.location.search);
+  const recipeId = params.get('id');
 
-    document.addEventListener('DOMContentLoaded', () => {
-      checkLoginStatus();
-      if (recipeId) {
-        loadRecipeDetail();
-      } else {
-        document.getElementById('recipeDetail').innerHTML = '<p>ไม่พบเมนู</p>';
-      }
-    });
-
-    async function loadRecipeDetail() {
-      try {
-        const { data } = await axios.get(`${supabaseUrl}/rest/v1/recipes?select=*,users(fullname),ratings(rating)&id=eq.${recipeId}`, {
-          headers: {
-            apikey: apiKey,
-            Authorization: `Bearer ${apiKey}`
-          }
-        });
-
-        const recipe = data[0];
-        const user = JSON.parse(localStorage.getItem('user'));
-        const avg = recipe.ratings?.length
-          ? (recipe.ratings.reduce((sum, r) => sum + r.rating, 0) / recipe.ratings.length).toFixed(1)
-          : "ยังไม่มี";
-
-        const isOwner = user && user.id === recipe.user_id;
-
-        let html = `
-          <h2>${recipe.title}</h2>
-          <img src="${recipe.image_url}" style="max-width:100%; margin:10px 0">
-          <p><b>รายละเอียด:</b> ${recipe.detail}</p>
-          <p><b>วัตถุดิบ:</b> ${recipe.ingredients}</p>
-          <p><b>ขั้นตอนการทำ:</b> ${recipe.steps}</p>
-          <p><b>เวลาปรุง:</b> ${recipe.cooking_time} นาที</p>
-          <p><b>ระดับความยาก:</b> ${recipe.difficulty}</p>
-          <p><b>คะแนนเฉลี่ย:</b> ⭐ ${avg} (${recipe.ratings?.length || 0} โหวต)</p>
-          <p><b>โดย:</b> ${recipe.users?.fullname || 'ไม่ทราบชื่อ'}</p>
-        `;
-
-        if (user && !isOwner) {
-          html += `
-            <label for="rateSelect"><b>ให้คะแนน:</b></label>
-            <select id="rateSelect" onchange="submitRating(${recipe.id}, this.value)">
-              <option value="">เลือกดาว</option>
-              <option value="1">1 ดาว</option>
-              <option value="2">2 ดาว</option>
-              <option value="3">3 ดาว</option>
-              <option value="4">4 ดาว</option>
-              <option value="5">5 ดาว</option>
-            </select>
-          `;
-        }
-
-        if (isOwner) {
-          html += `<br><br><a class="gf-button gf-yellow" href="profile.html">แก้ไขเมนูนี้</a>`;
-        }
-
-        document.getElementById('recipeDetail').innerHTML = html;
-
-        // โหลดเมนูอื่นของ user
-        loadOtherMenus(null, recipe.id);
-      } catch (err) {
-        console.error("loadRecipeDetail error", err);
-        alert("ไม่พบเมนูหรือโหลดข้อมูลผิดพลาด");
-      }
+  document.addEventListener('DOMContentLoaded', () => {
+    checkLoginStatus();
+    if (recipeId) {
+      loadRecipeDetail();
+    } else {
+      document.getElementById('recipeDetail').innerHTML = '<p>ไม่พบเมนู</p>';
     }
+  });
 
-async function loadOtherMenus(userId, excludeId) {
-  try {
-    const { data } = await axios.get(
-      `${supabaseUrl}/rest/v1/recipes?select=id,title,image_url,ratings(rating)&user_id=eq.${userId}&id=neq.${excludeId}`,
-      {
+  async function loadRecipeDetail() {
+    try {
+      const { data } = await axios.get(`${supabaseUrl}/rest/v1/recipes?select=*,users(fullname),ratings(rating)&id=eq.${recipeId}`, {
         headers: {
           apikey: apiKey,
-          Authorization: `Bearer ${apiKey}`,
-        },
+          Authorization: `Bearer ${apiKey}`
+        }
+      });
+
+      const recipe = data[0];
+      const user = JSON.parse(localStorage.getItem('user'));
+      const avg = recipe.ratings?.length
+        ? (recipe.ratings.reduce((sum, r) => sum + r.rating, 0) / recipe.ratings.length).toFixed(1)
+        : "ยังไม่มี";
+
+      const isOwner = user && user.id === recipe.user_id;
+
+      let html = `
+        <h2>${recipe.title}</h2>
+        <img src="${recipe.image_url}" style="max-width:100%; margin:10px 0">
+        <p><b>รายละเอียด:</b> ${recipe.detail}</p>
+        <p><b>วัตถุดิบ:</b> ${recipe.ingredients}</p>
+        <p><b>ขั้นตอนการทำ:</b> ${recipe.steps}</p>
+        <p><b>เวลาปรุง:</b> ${recipe.cooking_time} นาที</p>
+        <p><b>ระดับความยาก:</b> ${recipe.difficulty}</p>
+        <p><b>คะแนนเฉลี่ย:</b> ⭐ ${avg} (${recipe.ratings?.length || 0} โหวต)</p>
+        <p><b>โดย:</b> ${recipe.users?.fullname || 'ไม่ทราบชื่อ'}</p>
+      `;
+
+      if (user && !isOwner) {
+        html += `
+          <label for="rateSelect"><b>ให้คะแนน:</b></label>
+          <select id="rateSelect" onchange="submitRating(${recipe.id}, this.value)">
+            <option value="">เลือกดาว</option>
+            <option value="1">1 ดาว</option>
+            <option value="2">2 ดาว</option>
+            <option value="3">3 ดาว</option>
+            <option value="4">4 ดาว</option>
+            <option value="5">5 ดาว</option>
+          </select>
+        `;
       }
-    );
 
-    // จัดเรียงตาม rating แล้วเลือก 3 รายการ
-const sorted = data.map(r => {
-  const ratings = r.ratings || [];
-  const avg = ratings.length ? ratings.reduce((sum, x) => sum + x.rating, 0) / ratings.length : 0;
-  return { ...r, rating_avg: avg };
-}).sort((a, b) => b.rating_avg - a.rating_avg).slice(0, 3);
+      if (isOwner) {
+        html += `<br><br><a class="gf-button gf-yellow" href="profile.html">แก้ไขเมนูนี้</a>`;
+      }
 
-const html = sorted.map(r => `
-  <div class="gf-third gf-margin-bottom">
-    <div class="gf-card-4 gf-card-fixed">
-      <img src="${r.image_url}" style="width:100%">
-      <div class="gf-container gf-card-body">
-        <h4>${r.title}</h4>
-        <a href="recipe_detail.html?id=${r.id}" class="gf-button">ดูเพิ่มเติม</a>
-      </div>
-    </div>
-  </div>
-`).join('');
+      document.getElementById('recipeDetail').innerHTML = html;
 
-document.getElementById('relatedRecipes').innerHTML = html || '<p>ไม่มีเมนูอื่น</p>';
+      // เรียก load เมนูอื่น ๆ จากผู้ใช้เดียวกัน โดยส่ง user_id ที่ถูกต้อง
+      loadOtherMenus(recipe.user_id, recipe.id);
 
-  } catch (err) {
-    console.error("loadOtherMenus error", err);
+    } catch (err) {
+      console.error("loadRecipeDetail error", err);
+      alert("ไม่พบเมนูหรือโหลดข้อมูลผิดพลาด");
+    }
   }
-}
 
+  async function loadOtherMenus(userId, excludeId) {
+    try {
+      if (!userId) {
+        document.getElementById('relatedRecipes').innerHTML = '<p>ไม่มีเมนูอื่น</p>';
+        return;
+      }
 
+      const { data } = await axios.get(
+        `${supabaseUrl}/rest/v1/recipes?select=id,title,image_url,ratings(rating)&user_id=eq.${userId}&id=neq.${excludeId}`,
+        {
+          headers: {
+            apikey: apiKey,
+            Authorization: `Bearer ${apiKey}`,
+          },
+        }
+      );
 
-  </script>
+      // จัดเรียงตาม rating และจำกัด 3 รายการ
+      const sorted = data.map(r => {
+        const ratings = r.ratings || [];
+        const avg = ratings.length ? ratings.reduce((sum, x) => sum + x.rating, 0) / ratings.length : 0;
+        return { ...r, rating_avg: avg };
+      }).sort((a, b) => b.rating_avg - a.rating_avg).slice(0, 3);
+
+      const html = sorted.map(r => `
+        <div class="gf-third gf-margin-bottom">
+          <div class="gf-card-4 gf-card-fixed">
+            <img src="${r.image_url}" style="width:100%">
+            <div class="gf-container gf-card-body">
+              <h4>${r.title}</h4>
+              <a href="recipe_detail.html?id=${r.id}" class="gf-button">ดูเพิ่มเติม</a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('relatedRecipes').innerHTML = html || '<p>ไม่มีเมนูอื่น</p>';
+
+    } catch (err) {
+      console.error("loadOtherMenus error", err);
+      document.getElementById('relatedRecipes').innerHTML = '<p>ไม่สามารถโหลดเมนูอื่นได้</p>';
+    }
+  }
+</script>
+
 </body>
 </html>
