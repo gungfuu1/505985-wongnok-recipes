@@ -45,17 +45,17 @@ body {
   flex-wrap: wrap;
   gap: 16px;
 }
+.gf-third {
+  width: 33.3333%;
+  float: left;
+  box-sizing: border-box;
+  padding: 8px;
+}
+
 .gf-row::after {
   content: "";
   display: table;
   clear: both;
-}
-
-.gf-third {
-  float: left;
-  width: 33.3333%;
-  padding: 8px;
-  box-sizing: border-box;
 }
 
 .gf-margin-top {

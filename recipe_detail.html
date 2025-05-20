@@ -110,7 +110,8 @@ async function loadOtherMenus(userId, excludeId) {
       }
     );
 
-    const sorted = data
+    // จัดเรียงตาม rating แล้วเลือก 3 รายการ
+    const sorted = (data || [])
       .map(r => {
         const ratings = r.ratings || [];
         const avg = ratings.length
@@ -132,16 +133,17 @@ async function loadOtherMenus(userId, excludeId) {
             <a href="recipe_detail.html?id=${r.id}" class="gf-button">ดูเพิ่มเติม</a>
           </div>
         </div>
-      </div>
-    `
+      </div>`
       )
       .join("");
 
-    document.getElementById("relatedRecipes").innerHTML = html || "<p>ไม่มีเมนูอื่น</p>";
+    document.getElementById("relatedRecipes").innerHTML =
+      html || "<p>ไม่มีเมนูอื่น</p>";
   } catch (err) {
     console.error("loadOtherMenus error", err);
   }
 }
+
 
 
   </script>
