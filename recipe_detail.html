@@ -9,7 +9,7 @@
 </head>
 <body>
   <div class="gf-menubar gf-light-grey gf-padding">
-    <span class="gf-title">Wongnok Recipes</span>
+    <a href="index.html" class="gf-title" style="text-decoration:none; color:inherit;">Wongnok Recipes</a>
     <div class="gf-right">
       <a href="index.html" class="gf-button">หน้าหลัก</a>
       <a href="register.html" class="gf-button" id="registerMenu">ลงทะเบียน</a>
@@ -99,31 +99,39 @@
     }
 
     async function loadOtherMenus(userId, excludeId) {
-      try {
-        const { data } = await axios.get(`${supabaseUrl}/rest/v1/recipes?select=id,title,image_url&user_id=eq.${userId}&id=neq.${excludeId}`, {
-          headers: {
-            apikey: apiKey,
-            Authorization: `Bearer ${apiKey}`
-          }
-        });
-
-        const html = data.map(r => `
-          <div class="gf-third gf-container gf-margin-bottom">
-            <div class="gf-card-4">
-              <img src="${r.image_url}" style="width:100%">
-              <div class="gf-container">
-                <h4>${r.title}</h4>
-                <a href="recipe_detail.html?id=${r.id}" class="gf-button">ดูเพิ่มเติม</a>
-              </div>
-            </div>
-          </div>
-        `).join('');
-
-        document.getElementById('relatedRecipes').innerHTML = html || '<p>ไม่มีเมนูอื่น</p>';
-      } catch (err) {
-        console.error("loadOtherMenus error", err);
+  try {
+    const { data } = await axios.get(`${supabaseUrl}/rest/v1/recipes?select=id,title,image_url,ratings(rating)&user_id=eq.${userId}&id=neq.${excludeId}`, {
+      headers: {
+        apikey: apiKey,
+        Authorization: `Bearer ${apiKey}`
       }
-    }
+    });
+
+    // คำนวณ rating เฉลี่ย
+    const sorted = data.map(r => {
+      const ratings = r.ratings || [];
+      const avg = ratings.length ? ratings.reduce((sum, x) => sum + x.rating, 0) / ratings.length : 0;
+      return { ...r, rating_avg: avg };
+    }).sort((a, b) => b.rating_avg - a.rating_avg).slice(0, 3); // จำกัด 3 การ์ด
+
+    const html = sorted.map(r => `
+      <div class="gf-third gf-container gf-margin-bottom">
+        <div class="gf-card-4">
+          <img src="${r.image_url}" style="width:100%">
+          <div class="gf-container">
+            <h4>${r.title}</h4>
+            <a href="recipe_detail.html?id=${r.id}" class="gf-button">ดูเพิ่มเติม</a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    document.getElementById('relatedRecipes').innerHTML = html || '<p>ไม่มีเมนูอื่น</p>';
+  } catch (err) {
+    console.error("loadOtherMenus error", err);
+  }
+}
+
   </script>
 </body>
 </html>

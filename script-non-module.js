@@ -79,18 +79,7 @@ async function loadAllRecipes() {
                 <p>👤 โดย ${r.users?.fullname || 'ไม่ทราบชื่อ'}</p>
               </div>
             </a>
-            ${canRate ? `
-              <div class="gf-container">
-                <select onchange="submitRating(${r.id}, this.value)">
-                  <option value="">ให้คะแนน</option>
-                  <option value="1">1 ดาว</option>
-                  <option value="2">2 ดาว</option>
-                  <option value="3">3 ดาว</option>
-                  <option value="4">4 ดาว</option>
-                  <option value="5">5 ดาว</option>
-                </select>
-              </div>
-            ` : ''}
+            
           </div>
         </div>
       `;
