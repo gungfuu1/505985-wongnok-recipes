@@ -9,6 +9,7 @@ function checkLoginStatus() {
   const createMenu = document.getElementById('createRecipeMenu');
   const registerMenu = document.getElementById('registerMenu');
   const profileMenu = document.getElementById('profileMenu');
+  const userGreeting = document.getElementById('userGreeting');
 
   if (user) {
     loginMenu.textContent = 'ออกจากระบบ';
@@ -16,17 +17,30 @@ function checkLoginStatus() {
       localStorage.removeItem('user');
       location.href = 'index.html';
     };
+
     if (createMenu) createMenu.style.display = 'inline-block';
     if (registerMenu) registerMenu.style.display = 'none';
     if (profileMenu) profileMenu.style.display = 'inline-block';
+
+    if (userGreeting) {
+      userGreeting.textContent = `สวัสดี, ${user.fullname}`;
+      userGreeting.style.display = 'inline';
+    }
   } else {
     loginMenu.textContent = 'เข้าสู่ระบบ';
     loginMenu.onclick = () => location.href = 'login.html';
+
     if (createMenu) createMenu.style.display = 'none';
     if (registerMenu) registerMenu.style.display = 'inline-block';
     if (profileMenu) profileMenu.style.display = 'none';
+
+    if (userGreeting) {
+      userGreeting.textContent = '';
+      userGreeting.style.display = 'none';
+    }
   }
 }
+
 
 // === โหลดเมนูทั้งหมด ===
 async function loadAllRecipes() {
