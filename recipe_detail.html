@@ -91,28 +91,28 @@
         document.getElementById('recipeDetail').innerHTML = html;
 
         // โหลดเมนูอื่นของ user
-        loadOtherMenus(recipe.user_id, recipe.id);
+        loadOtherMenus(null, recipe.id);
       } catch (err) {
         console.error("loadRecipeDetail error", err);
         alert("ไม่พบเมนูหรือโหลดข้อมูลผิดพลาด");
       }
     }
 
-    async function loadOtherMenus(userId, excludeId) {
+    async function loadOtherMenus(_, excludeId) {
   try {
-    const { data } = await axios.get(`${supabaseUrl}/rest/v1/recipes?select=id,title,image_url,ratings(rating)&user_id=eq.${userId}&id=neq.${excludeId}`, {
+    const { data } = await axios.get(`${supabaseUrl}/rest/v1/recipes?select=id,title,image_url,ratings(rating)&id=neq.${excludeId}`, {
       headers: {
         apikey: apiKey,
         Authorization: `Bearer ${apiKey}`
       }
     });
 
-    // คำนวณ rating เฉลี่ย
+    // คำนวณและเรียงคะแนนเฉลี่ย
     const sorted = data.map(r => {
       const ratings = r.ratings || [];
       const avg = ratings.length ? ratings.reduce((sum, x) => sum + x.rating, 0) / ratings.length : 0;
       return { ...r, rating_avg: avg };
-    }).sort((a, b) => b.rating_avg - a.rating_avg).slice(0, 3); // จำกัด 3 การ์ด
+    }).sort((a, b) => b.rating_avg - a.rating_avg).slice(0, 3); // จำกัดแค่ 3 การ์ด
 
     const html = sorted.map(r => `
       <div class="gf-third gf-container gf-margin-bottom">
@@ -131,6 +131,7 @@
     console.error("loadOtherMenus error", err);
   }
 }
+
 
   </script>
 </body>
