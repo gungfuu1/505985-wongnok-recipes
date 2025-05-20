@@ -46,9 +46,7 @@ body {
   gap: 16px;
 }
 .gf-third {
-  width: 33.3333%;
-  float: left;
-  padding: 0 8px;
+  flex: 0 0 calc(33.333% - 16px); /* กว้าง 1 ใน 3 ลบช่องว่าง */
   box-sizing: border-box;
 }
 
@@ -103,8 +101,8 @@ body {
 
 .gf-row {
   display: flex;
-  gap: 8px; /* ระยะห่างระหว่างช่อง search/filter */
   flex-wrap: wrap;
+  gap: 16px; /* ช่องว่างระหว่างการ์ด */
 }
 
 .gf-title {
