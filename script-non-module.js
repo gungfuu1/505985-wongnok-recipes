@@ -153,9 +153,7 @@ function loadUserRecipes() {
       list.innerHTML = '<p>ยังไม่มีเมนูของคุณ</p>';
       return;
     }
-     if (list) {
-    loadUserRecipes();
-  }
+     
   
     list.innerHTML = res.data.map(r => `
   <div class="gf-third gf-container gf-margin-bottom">
@@ -326,11 +324,18 @@ function loadUserInfo() {
 // === DOM Loaded: Apply login check & Load index ===
 document.addEventListener('DOMContentLoaded', () => {
   checkLoginStatus();
+
   if (document.getElementById('recipesList')) {
     loadAllRecipes();
     document.getElementById('searchBox')?.addEventListener('input', loadAllRecipes);
     document.getElementById('filterSelect')?.addEventListener('change', loadAllRecipes);
-    if (document.getElementById('userInfo')) 
+  }
+
+  if (document.getElementById('userInfo')) {
     loadUserInfo();
+  }
+
+  if (document.getElementById('userRecipeList')) {
+    loadUserRecipes();
   }
 });
