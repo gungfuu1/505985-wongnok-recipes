@@ -259,6 +259,12 @@ function validateRegisterForm() {
     alert('กรุณากรอกอายุเป็นตัวเลขที่ถูกต้อง');
     return false;
   }
+  
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+    alert('กรุณากรอกอีเมลในรูปแบบที่ถูกต้อง');
+    return false;
+  }
 
   return true;
 }
@@ -349,9 +355,11 @@ function validateCreateRecipeForm() {
   const title = document.getElementById('title').value.trim();
   const ingredients = document.getElementById('ingredients').value.trim();
   const steps = document.getElementById('steps').value.trim();
+  const cooking_time = document.getElementById('cooking_time').value.trim();
 
-  if (!title || !ingredients || !steps) {
-    alert('กรุณากรอกชื่อเมนู วัตถุดิบ และขั้นตอนการทำให้ครบ');
+
+  if (!title || !ingredients || !steps || !cooking_time) {
+    alert('กรุณากรอกชื่อเมนู วัตถุดิบ ขั้นตอนการทำ และระยะเวลาในการปรุงให้ครบ');
     return false;
   }
 
