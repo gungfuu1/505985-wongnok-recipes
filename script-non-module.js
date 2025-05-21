@@ -355,7 +355,7 @@ function validateCreateRecipeForm() {
   const title = document.getElementById('title').value.trim();
   const ingredients = document.getElementById('ingredients').value.trim();
   const steps = document.getElementById('steps').value.trim();
-  const cooking_time = document.getElementById('cooking_time').value.trim();
+  const cooking_time = document.getElementById('cookingTime').value.trim();
 
 
   if (!title || !ingredients || !steps || !cooking_time) {
