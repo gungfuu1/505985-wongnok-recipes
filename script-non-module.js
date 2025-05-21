@@ -304,6 +304,7 @@ function loginUser() {
 // ฟังก์ชันโหลดข้อมูลผู้ใช้ที่ล็อกอินมาแสดง
 function loadUserInfo() {
   const user = JSON.parse(localStorage.getItem('user'));
+  console.log('User from localStorage:', user);
   const userInfoDiv = document.getElementById('userInfo');
   
   if (!user) {
