@@ -241,15 +241,38 @@ document.addEventListener('DOMContentLoaded', () => {
   if (userRecipeList) loadUserRecipes();
 });
 
-// === ลงทะเบียน ===
+// === ลงทะเบียน และตรวจสอบข้อมูลครบ===
+function validateRegisterForm() {
+  const fullname = document.getElementById('gf-fullname').value.trim();
+  const age = document.getElementById('gf-age').value.trim();
+  const occupation = document.getElementById('gf-occupation').value.trim();
+  const email = document.getElementById('gf-email').value.trim();
+  const birthdate = document.getElementById('gf-birthdate').value.trim();
+  const password = document.getElementById('gf-password').value.trim();
+
+  if (!fullname || !age || !occupation || !email || !birthdate || !password) {
+    alert('กรุณากรอกข้อมูลให้ครบทุกช่อง');
+    return false;
+  }
+
+  if (isNaN(age) || age <= 0) {
+    alert('กรุณากรอกอายุเป็นตัวเลขที่ถูกต้อง');
+    return false;
+  }
+
+  return true;
+}
+
 function registerUser() {
+  if (!validateRegisterForm()) return;
+
   const data = {
-    fullname: document.getElementById('gf-fullname').value,
+    fullname: document.getElementById('gf-fullname').value.trim(),
     age: parseInt(document.getElementById('gf-age').value),
-    occupation: document.getElementById('gf-occupation').value,
-    email: document.getElementById('gf-email').value,
-    birthdate: document.getElementById('gf-birthdate').value,
-    password: document.getElementById('gf-password').value,
+    occupation: document.getElementById('gf-occupation').value.trim(),
+    email: document.getElementById('gf-email').value.trim(),
+    birthdate: document.getElementById('gf-birthdate').value.trim(),
+    password: document.getElementById('gf-password').value.trim(),
     created_at: new Date().toISOString()
   };
 
@@ -268,6 +291,7 @@ function registerUser() {
     alert("ลงทะเบียนไม่สำเร็จ");
   });
 }
+
 
 // === เข้าสู่ระบบ ===
 function loginUser() {
@@ -319,6 +343,66 @@ function loadUserInfo() {
     <p><b>วันเกิด:</b> ${user.birthdate || '-'}</p>
   `;
 }
+
+// สร้างเมนูอาหาร
+function validateCreateRecipeForm() {
+  const title = document.getElementById('title').value.trim();
+  const ingredients = document.getElementById('ingredients').value.trim();
+  const steps = document.getElementById('steps').value.trim();
+
+  if (!title || !ingredients || !steps) {
+    alert('กรุณากรอกชื่อเมนู วัตถุดิบ และขั้นตอนการทำให้ครบ');
+    return false;
+  }
+
+  return true;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('createRecipeForm');
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!validateCreateRecipeForm()) return;
+
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) {
+        alert('กรุณาเข้าสู่ระบบก่อนสร้างเมนู');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const data = {
+        title: document.getElementById('title').value.trim(),
+        detail: document.getElementById('detail').value.trim(),
+        ingredients: document.getElementById('ingredients').value.trim(),
+        steps: document.getElementById('steps').value.trim(),
+        cooking_time: parseInt(document.getElementById('cookingTime').value) || 0,
+        difficulty: document.getElementById('difficulty').value,
+        image_url: document.getElementById('imageUrl').value.trim(),
+        user_id: user.id,
+        created_at: new Date().toISOString()
+      };
+
+      try {
+        await axios.post(`${supabaseUrl}/rest/v1/recipes`, data, {
+          headers: {
+            apikey: apiKey,
+            Authorization: `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=representation'
+          }
+        });
+        alert('เพิ่มเมนูอาหารสำเร็จ');
+        window.location.href = 'profile.html';
+      } catch (err) {
+        console.error('createRecipe error', err);
+        alert('ไม่สามารถบันทึกเมนูได้ กรุณาลองใหม่');
+      }
+    });
+  }
+});
 
 
 // === DOM Loaded: Apply login check & Load index ===
