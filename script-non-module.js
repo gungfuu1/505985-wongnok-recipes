@@ -89,6 +89,7 @@ async function loadAllRecipes() {
               <div class="gf-container gf-card-body">
                 <h4><b>${r.title}</b></h4>
                 <p class="gf-truncate-3">${r.detail || ''}</p>
+                <p>⏲️ เวลาปรุง: ${r.cooking_time || '-'} นาที</p>
                 <p>⭐ ${avg} (${r.ratings?.length || 0} โหวต)</p>
                 <p>👤 โดย ${r.users?.fullname || 'ไม่ทราบชื่อ'}</p>
               </div>
