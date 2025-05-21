@@ -153,6 +153,10 @@ function loadUserRecipes() {
       list.innerHTML = '<p>ยังไม่มีเมนูของคุณ</p>';
       return;
     }
+     if (list) {
+    loadUserRecipes();
+  }
+  
     list.innerHTML = res.data.map(r => `
   <div class="gf-third gf-container gf-margin-bottom">
     <a href="recipe_detail.html?id=${r.id}" style="text-decoration:none; color:inherit;">
@@ -296,6 +300,28 @@ function loginUser() {
   });
 }
 
+
+// ฟังก์ชันโหลดข้อมูลผู้ใช้ที่ล็อกอินมาแสดง
+function loadUserInfo() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userInfoDiv = document.getElementById('userInfo');
+  
+  if (!user) {
+    userInfoDiv.innerHTML = '<p>กรุณาเข้าสู่ระบบเพื่อดูข้อมูลโปรไฟล์</p>';
+    return;
+  }
+    // แสดงข้อมูลผู้ใช้แบบง่ายๆ
+  userInfoDiv.innerHTML = `
+    <h2>ข้อมูลผู้ใช้</h2>
+    <p><b>ชื่อ-สกุล:</b> ${user.fullname || '-'}</p>
+    <p><b>อายุ:</b> ${user.age || '-'}</p>
+    <p><b>อาชีพ:</b> ${user.occupation || '-'}</p>
+    <p><b>Email:</b> ${user.email || '-'}</p>
+    <p><b>วันเกิด:</b> ${user.birthdate || '-'}</p>
+  `;
+}
+
+
 // === DOM Loaded: Apply login check & Load index ===
 document.addEventListener('DOMContentLoaded', () => {
   checkLoginStatus();
@@ -303,5 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadAllRecipes();
     document.getElementById('searchBox')?.addEventListener('input', loadAllRecipes);
     document.getElementById('filterSelect')?.addEventListener('change', loadAllRecipes);
+    if (document.getElementById('userInfo')) 
+    loadUserInfo();
   }
 });
