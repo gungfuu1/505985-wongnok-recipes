@@ -160,6 +160,7 @@ input.gf-input {
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
   text-decoration: none;
   color: inherit;
+  margin-bottom: 16px;
 }
 h2 {
     text-align: center;
@@ -168,6 +169,15 @@ h2 {
     color: #2c3e50;
     margin-bottom: 1rem;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+.gf-user-box {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 .gf-user-box p {
   margin-bottom: 10px;
@@ -207,6 +217,7 @@ h2 {
 
   .gf-title {
     font-size: 1.6em; /* ขยายเล็กน้อยในแท็บเล็ต */
+    margin-bottom: 16px;
   }
 
   h2 {
