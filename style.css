@@ -245,5 +245,6 @@ h2 {
   #filterSelect {
     width: 100% !important;
     margin-bottom: 10px;
+    box-sizing: border-box;
   }
 }
