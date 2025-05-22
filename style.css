@@ -58,6 +58,13 @@ margin: 0 0 10px 0;
 #userInfo p {
 margin: 4px 0;
 }
+.gf-modal-form {
+  max-width: 600px;
+  margin: auto;
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+}
 .gf-input, .gf-select {
   padding: 10px;
   width: 100%;
@@ -161,6 +168,11 @@ h2 {
     margin-bottom: 1rem;
     text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
 }
+.gf-user-box p {
+  margin-bottom: 10px;
+  font-size: 1em;
+  line-height: 1.4;
+}
 
 /* จอแท็บเล็ต และสมาทโฟน */
 
@@ -205,12 +217,15 @@ h2 {
   }
 }
 
-/* สไตล์สำหรับมือถือ (ขนาดหน้าจอต่ำกว่า 768px) */
+/* สไตล์สำหรับมือถือ (ขนาดหน้าจอต่ำกว่า 768px) -------------------*/
 @media (max-width: 767px) {
   .gf-menu-toggle {
     display: block;
   }
-
+  #userInfo p {
+    margin-bottom: 12px;
+    word-break: break-word; /* ป้องกันข้อความยาวล้น */
+  }
   .gf-right {
     display: none;
     flex-direction: column;
@@ -281,6 +296,15 @@ h2 {
   #filterSelect {
     width: 100% !important;
     margin-bottom: 10px;
+    box-sizing: border-box;
+  }
+  .gf-modal-form {
+    padding: 16px;
+    width: 90%; /* ขนาดพอดีมือถือ */
+  }
+  .gf-modal-content input,
+  .gf-modal-content textarea {
+    width: 100%;
     box-sizing: border-box;
   }
 }
