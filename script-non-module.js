@@ -350,8 +350,9 @@ function loadUserInfo() {
   }
     // แสดงข้อมูลผู้ใช้แบบง่ายๆ
   userInfoDiv.innerHTML = `
-    <h2 class="gf-title">ข้อมูลผู้ใช้</h2>
+    
     <div class="gf-user-box">
+    <h2 class="gf-title">ข้อมูลผู้ใช้</h2>
     <p><b>ชื่อ-สกุล:</b> ${user.fullname || '-'}</p>
     <p><b>อายุ:</b> ${user.age || '-'}</p>
     <p><b>อาชีพ:</b> ${user.occupation || '-'}</p>
