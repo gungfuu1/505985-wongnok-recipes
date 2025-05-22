@@ -208,7 +208,11 @@ h2 {
     display: flex;
     flex-wrap: wrap;
   }
-
+  #userGreeting {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+  }
   .gf-third {
     width: 50%; /* 2 card per row */
     padding: 10px;
