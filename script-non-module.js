@@ -425,15 +425,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
  const params = new URLSearchParams(window.location.search);
  const recipeId = params.get('id');
-
+//เช็คว่ามี element ก่อนเรียก .innerHTML
   document.addEventListener('DOMContentLoaded', () => {
-    checkLoginStatus();
+  checkLoginStatus();
+
+  const detailDiv = document.getElementById('recipeDetail');
+  if (detailDiv) {
     if (recipeId) {
       loadRecipeDetail();
     } else {
-      document.getElementById('recipeDetail').innerHTML = '<p>ไม่พบเมนู</p>';
+      detailDiv.innerHTML = '<p>ไม่พบเมนู</p>';
     }
-  });
+  }
+
+  if (document.getElementById('recipesList')) {
+    loadAllRecipes();
+    document.getElementById('searchBox')?.addEventListener('input', loadAllRecipes);
+    document.getElementById('filterSelect')?.addEventListener('change', loadAllRecipes);
+  }
+
+  if (document.getElementById('userInfo')) {
+    loadUserInfo();
+  }
+
+  if (document.getElementById('userRecipeList')) {
+    loadUserRecipes();
+  }
+});
 
   async function loadRecipeDetail() {
     try {
