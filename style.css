@@ -186,6 +186,11 @@ h2 {
   line-height: 1.4;
   word-break: break-word;
 }
+.gf-greeting {
+  display: block;
+  font-weight: bold;
+  margin: 8px 0 0 20px;
+}
 
 /* จอแท็บเล็ต และสมาทโฟน */
 
@@ -213,6 +218,11 @@ h2 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+    .gf-greeting {
+    font-size: 1em;
+    margin-left: 0;
+    margin-bottom: 8px;
   }
   .gf-third {
     width: 50%; /* 2 card per row */
