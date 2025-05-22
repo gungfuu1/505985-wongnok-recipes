@@ -43,6 +43,21 @@ body {
 .gf-button:hover {
   background-color: #ffc078;
 }
+/* จัดให้ข้อมูลผู้ใช้เด่นชัด */
+#userInfo {
+margin-bottom: 20px;
+padding: 15px;
+border: 1px solid #ccc;
+border-radius: 8px;
+background-color: #f9f9f9;
+max-width: 600px;
+}
+#userInfo h2 {
+margin: 0 0 10px 0;
+}
+#userInfo p {
+margin: 4px 0;
+}
 .gf-input, .gf-select {
   padding: 10px;
   width: 100%;
