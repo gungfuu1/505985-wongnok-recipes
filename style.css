@@ -48,6 +48,10 @@ body {
   width: 100%;
   margin-bottom: 8px;
 }
+input.gf-input {
+  width: 100%;
+  box-sizing: border-box;
+}
 .gf-container {
   padding: 16px;
 }
@@ -220,8 +224,11 @@ h2 {
   }
 
   .gf-container {
+    width: 100%;
     padding: 10px;
+    box-sizing: border-box;
   }
+
   .gf-menubar {
     font-size: 14px; 
   }
@@ -233,6 +240,16 @@ h2 {
     padding: 12px;
     margin-bottom: 10px;
     display: block;
+  }
+  input.gf-input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .gf-container form,
+  .gf-container > div {
+    width: 100%;
+    max-width: 100%;
   }
 
   h2 {
