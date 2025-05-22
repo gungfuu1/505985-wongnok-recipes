@@ -70,6 +70,7 @@ margin: 4px 0;
   padding: 10px;
   width: 100%;
   margin-bottom: 8px;
+  box-sizing: border-box;
 }
 input.gf-input {
   width: 100%;
@@ -298,6 +299,10 @@ h2 {
 
   .gf-menubar {
     font-size: 14px; 
+  }
+  .gf-input {
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .gf-title {
