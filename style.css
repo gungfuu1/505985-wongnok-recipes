@@ -29,6 +29,10 @@ body {
 .gf-menubar .gf-right {
   float: right;
 }
+.gf-right {
+  display: flex;
+  align-items: center;
+}
 .gf-button {
   border: none;
   padding: 8px 16px;
