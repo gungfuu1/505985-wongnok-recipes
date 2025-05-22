@@ -27,7 +27,7 @@ body {
   color: #000;
 }
 .gf-menubar .gf-right {
-  float: right;
+  float: none;
 }
 .gf-right {
   display: flex;
