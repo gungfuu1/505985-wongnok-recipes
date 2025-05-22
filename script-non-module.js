@@ -42,6 +42,14 @@ function checkLoginStatus() {
 }
 
 
+// toggle menu สำหรับ tablet และ smartphone
+function toggleMenu() {
+  const menu = document.getElementById("mobileMenu");
+  menu.classList.toggle("gf-show");
+}
+
+
+
 // === โหลดเมนูทั้งหมด ===
 async function loadAllRecipes() {
   try {

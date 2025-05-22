@@ -7,6 +7,18 @@ body {
   background-color: #fff4e6;
   overflow: hidden;
   font-size: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.gf-menu-toggle {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
 }
 .gf-menubar .gf-button {
   display: inline-block;
@@ -170,6 +182,27 @@ h2 {
 
 /* สไตล์สำหรับมือถือ (ขนาดหน้าจอต่ำกว่า 768px) */
 @media (max-width: 767px) {
+  .gf-menu-toggle {
+    display: block;
+  }
+
+  .gf-right {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .gf-right.gf-show {
+    display: flex;
+  }
+
+  .gf-right a {
+    text-align: left;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #fff4e6;
+  }
+  
   .gf-row {
     display: flex;
     flex-direction: column;
