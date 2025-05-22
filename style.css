@@ -197,6 +197,7 @@ h2 {
   text-overflow: ellipsis;
   flex-shrink: 0;
   align-items: center;
+  margin-top: 5px;
 }
 .gf-menu-container {
   display: flex;
@@ -242,6 +243,7 @@ h2 {
     order: -1;
     margin-right: auto;
     align-items: center;
+    margin-top: 5px;
   }
   .gf-third {
     width: 50%; /* 2 card per row */
@@ -303,6 +305,7 @@ h2 {
     margin: 8px 0;
     text-align: left;
     align-items: center;
+    margin-top: 5px;
   }
 
   .gf-right.gf-show {
