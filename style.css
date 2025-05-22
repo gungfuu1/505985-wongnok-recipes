@@ -187,9 +187,10 @@ h2 {
   word-break: break-word;
 }
 .gf-greeting {
-  display: block;
   font-weight: bold;
-  margin: 8px 0 0 20px;
+  margin-left: 16px;
+  margin-top: 8px;
+  display: block;
 }
 
 /* จอแท็บเล็ต และสมาทโฟน */
@@ -280,6 +281,10 @@ h2 {
     display: none;
     flex-direction: column;
     width: 100%;
+  }
+    .gf-greeting {
+    margin: 8px 0;
+    text-align: left;
   }
 
   .gf-right.gf-show {
