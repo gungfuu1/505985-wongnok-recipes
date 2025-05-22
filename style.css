@@ -209,9 +209,10 @@ h2 {
     flex-wrap: wrap;
   }
   #userGreeting {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 0.95em;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .gf-third {
     width: 50%; /* 2 card per row */
