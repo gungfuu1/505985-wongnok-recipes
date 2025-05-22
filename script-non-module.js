@@ -93,9 +93,9 @@ async function loadAllRecipes() {
         <div class="gf-third gf-margin-bottom">
           <div class="gf-card-4 gf-card-fixed">
             <a href="recipe_detail.html?id=${r.id}" style="text-decoration:none;color:inherit">
-              <img src="${r.image_url}" style="width:100%">
+              <img src="${r.image_url}" alt="${r.title}" style="width:100%">
               <div class="gf-container gf-card-body">
-                <h4><b>${r.title}</b></h4>
+                <h3><b>${r.title}</b></h3>
                 <p class="gf-truncate-3">${r.detail || ''}</p>
                 <p>⏲️ เวลาปรุง: ${r.cooking_time || '-'} นาที</p>
                 <p>⭐ ${avg} (${r.ratings?.length || 0} โหวต)</p>

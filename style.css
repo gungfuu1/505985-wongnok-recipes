@@ -45,12 +45,13 @@ body {
 }
 /* จัดให้ข้อมูลผู้ใช้เด่นชัด */
 #userInfo {
-margin-bottom: 20px;
-padding: 15px;
-border: 1px solid #ccc;
-border-radius: 8px;
-background-color: #f9f9f9;
-max-width: 600px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin-bottom: 24px;
 }
 #userInfo h2 {
 margin: 0 0 10px 0;
@@ -222,6 +223,11 @@ h2 {
   .gf-menu-toggle {
     display: block;
   }
+    #userInfo {
+    padding: 16px;
+    box-sizing: border-box;
+    width: 100%;
+  }
   #userInfo p {
     margin-bottom: 12px;
     word-break: break-word; /* ป้องกันข้อความยาวล้น */
@@ -249,8 +255,27 @@ h2 {
   }
 
   .gf-third {
-    width: 100%; /* 1 card per row */
+    width: 100% !important;
     padding: 10px;
+  }
+  .gf-card-body p {
+  font-size: 0.95em;
+  line-height: 1.4;
+  margin-bottom: 6px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+
+  line-clamp: 3;
+  box-orient: vertical;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  }
+
+  .gf-card-body h4 {
+    font-size: 1.05em;
   }
 
   .gf-container {
