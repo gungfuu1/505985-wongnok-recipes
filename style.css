@@ -127,6 +127,8 @@ body {
   background: linear-gradient(to right, #fff3e0, #ffe0b2);
   border-radius: 4px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  color: inherit;
 }
 h2 {
     text-align: center;
@@ -202,7 +204,7 @@ h2 {
     border-top: 1px solid #ddd;
     background-color: #fff4e6;
   }
-  
+
   .gf-row {
     display: flex;
     flex-direction: column;
@@ -217,18 +219,31 @@ h2 {
     padding: 10px;
   }
   .gf-menubar {
-    font-size: 14px; /* ลดขนาดตัวอักษรในมือถือ */
+    font-size: 14px; 
   }
 
   .gf-title {
-    font-size: 1.4em; /* ปรับขนาดชื่อเว็บให้เล็กลงในมือถือ */
+    font-size: 1.4em;
+    text-align: center;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    display: block;
   }
 
   h2 {
-    font-size: 2rem; /* ลดขนาดของหัวข้อในมือถือ */
+    font-size: 2rem; 
   }
 
   .gf-button {
-    padding: 8px 12px; /* ปรับปุ่มให้พอดีกับขนาดหน้าจอ */
+    padding: 8px 12px; 
+  }
+  .gf-row.gf-gap {
+    flex-direction: column;
+  }
+  #searchBox,
+  #filterSelect {
+    width: 100% !important;
+    margin-bottom: 10px;
   }
 }
