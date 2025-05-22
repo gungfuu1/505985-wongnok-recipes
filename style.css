@@ -202,7 +202,7 @@ h2 {
   }
 }
 
-/* สไตล์สำหรับแท็บเล็ต (ขนาดหน้าจอ 768px - 1024px) */
+/* สไตล์สำหรับแท็บเล็ต (ขนาดหน้าจอ 768px - 1024px) --------Tablet----------*/
 @media (min-width: 768px) and (max-width: 1024px) {
   .gf-row {
     display: flex;
@@ -214,11 +214,15 @@ h2 {
     padding: 10px;
   }
    .gf-menubar {
-    font-size: 16px; /* ปรับขนาดตัวอักษรในแท็บเล็ต */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
   }
 
   .gf-title {
     font-size: 1.6em; /* ขยายเล็กน้อยในแท็บเล็ต */
+    margin: 0;
     margin-bottom: 16px;
   }
 
@@ -229,9 +233,17 @@ h2 {
   .gf-button {
     padding: 10px 14px; /* ปรับขนาดปุ่ม */
   }
+  .gf-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .gf-menu-toggle {
+    display: none; /* ไม่ต้องแสดง hamburger ใน tablet แนวนอน */
+  }
 }
 
-/* สไตล์สำหรับมือถือ (ขนาดหน้าจอต่ำกว่า 768px) -------------------*/
+/* สไตล์สำหรับมือถือ (ขนาดหน้าจอต่ำกว่า 768px) --------Mobile-----------*/
 @media (max-width: 767px) {
   .gf-menu-toggle {
     display: block;
