@@ -32,6 +32,9 @@ body {
 .gf-right {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
 }
 .gf-button {
   border: none;
@@ -188,9 +191,10 @@ h2 {
 }
 .gf-greeting {
   font-weight: bold;
-  margin-left: 16px;
-  margin-top: 8px;
-  display: block;
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 /* จอแท็บเล็ต และสมาทโฟน */
@@ -221,9 +225,7 @@ h2 {
     white-space: nowrap;
   }
     .gf-greeting {
-    font-size: 1em;
-    margin-left: 0;
-    margin-bottom: 8px;
+    order: -1;
   }
   .gf-third {
     width: 50%; /* 2 card per row */
@@ -251,9 +253,7 @@ h2 {
     padding: 10px 14px; /* ปรับขนาดปุ่ม */
   }
   .gf-right {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+    justify-content: flex-end;
   }
   .gf-menu-toggle {
     display: none; /* ไม่ต้องแสดง hamburger ใน tablet แนวนอน */
